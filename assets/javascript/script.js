@@ -19,7 +19,6 @@ let country;
 // Hide result divs on pageload, animate header and search button, run search function
 $(document).ready(function () {
   $header.hide().fadeIn(2000);
-  locationSearchDiv();
   $inputCard
     .hide()
     .delay(1000)
@@ -34,7 +33,7 @@ $(document).ready(function () {
 
 // Search function on enter press
 function input() {
-  $(document).on("keypress", $search, function (event) {
+  $search.on("keypress", function (event) {
     // If no value entered
     if (event.which === 13 && $search.val() === "") {
       event.preventDefault();
@@ -68,54 +67,6 @@ function input() {
   });
 }
 
-//Creating html elements w/ jquery
-function locationSearchDiv() {
-  var $row = $("<div>");
-  $row.addClass("row");
-  $row.attr("id", "inputCard");
-  var $col = $("<div>");
-  $col.addClass("col s12 m6 offset-m3");
-  var $background = $("<div>");
-  $background.addClass("card inputBackground");
-  var $content = $("<div>");
-  $content.addClass("card-content");
-  $content.html('<span class="card-title">Where do you want to go?</span>' +
-    '<br>' +
-    '<div class="row">' +
-    '<div class="input-field">' +
-    '<input id="location_input" type="text">' +
-    '<label class="active inputLabel" for="location_input" id="search">Search:</label>' +
-    '</div >' +
-    '</div >')
-  $("main").append($row);
-  $row.append($col);
-  $col.append($background);
-  $background.append($content);
-}
-
-//taking pre-existing html code and remaking it w/ jquery
-function travelAlertsMapsDiv() {
-  var $travelAlert = $("<div>");
-  $travelAlert.html('<div class="row">' +
-    '<div class="col s12 m6">' +
-    '<div class="card" id="alertCard">' +
-    '<div class="card-content white-text">' +
-    '<span class="card-title mainText alerts">Travel Information</span>' +
-    '<p id="alertDiv"></p>' +
-    '</div>' +
-    '</div>' +
-    '</div>' +
-
-    '<div class="col s12 m6">' +
-    '<div class="card" id="mapCard">' +
-    '<div class="card-content white-text">' +
-    '<span class="card-title mainText">Map</span>' +
-    '<iframe min-height="450px" min-width="450px" frameborder="0" style="border:0"></iframe>' +
-    '</div>' +
-    '</div>' +
-    '</div>' +
-    '</div>')
-}
 // Show result cards
 function showCards() {
   $button.show();
