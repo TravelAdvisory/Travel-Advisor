@@ -15,18 +15,9 @@ let articleUrl;
 let dataUrl;
 let countryUrl;
 let country;
-<<<<<<< HEAD
 let globalInput;
 let googleOutput;
 let fullAddress;
-$header.hide().fadeIn(250);
-$inputCard
-  .hide()
-  .delay(500)
-  .fadeIn(900);
-  
-$alertCard.hide();
-=======
 
 // Hide result divs on pageload, animate header and search button, run search function
 $(document).ready(function () {
@@ -36,15 +27,9 @@ $(document).ready(function () {
     .delay(1000)
     .fadeIn(2000);
   $alertCard.hide();
->>>>>>> e9507dbbf9b6be66f907c3849d6e2d2fb0216674
   $mapCard.hide();
   $newsCard.hide();
-  $button.hide();
-
-// Hide result divs on pageload, animate header and search button, run search function
-$(document).ready(function() {
-  
- 
+  $button.hide(); 
   $("select").material_select();
   input();
 });
@@ -70,7 +55,6 @@ function input() {
       setTimeout(showCards, 1500);
       //console.log("[LOG] " + input);
 
-<<<<<<< HEAD
       //   Test appends
       let pDiv = $("#alertDiv");
       pDiv.text(input);
@@ -78,15 +62,12 @@ function input() {
       $li.text(input + " List Item(s)");
       $(".ulText").append($li);
 
-=======
->>>>>>> e9507dbbf9b6be66f907c3849d6e2d2fb0216674
       //   Embed google map
       mapUrl =
         "https://www.google.com/maps/embed/v1/search?key=AIzaSyCv-DHBFYZNL-eaSZDKZRzE_BE5LpMcUe4&q=" +
         input;
       $("iframe").attr("src", mapUrl);
 
-<<<<<<< HEAD
       //call the google ajax function, which in turn calls wJax()
       gJax();
     }
@@ -148,7 +129,6 @@ function wJax() {
       $("#alertCard").append(dangerIcon);
       $("#alertCard").append(simpleAdvice);
       $("#alertCard").append(advisoryDescription);
-=======
       // NYT Article Search
       let articleUrl = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
       articleUrl +=
@@ -182,7 +162,6 @@ function wJax() {
       .fail(function(err) {
         throw err;
       });
->>>>>>> e9507dbbf9b6be66f907c3849d6e2d2fb0216674
     }
   });
 }
@@ -199,11 +178,7 @@ function showCards() {
 
 // Reset page on button click
 function reset() {
-<<<<<<< HEAD
-  $button.on("click", function() {
-=======
   $button.on("click", function(event) {
->>>>>>> e9507dbbf9b6be66f907c3849d6e2d2fb0216674
     //   Prevents dupicate click assignments
     event.preventDefault();
     $button.off("click");
