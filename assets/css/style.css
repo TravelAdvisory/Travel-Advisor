@@ -20,9 +20,18 @@ body {
   .row {
     margin-bottom: 1px;
   }
+
+  .hidden {
+    display: none;
+  }
   
   .page-header {
     background-color: rgba(240, 233, 233, 0.05);
+  }
+
+  h2, 
+  p {
+    font-size: 1.25rem;
   }
   
   span, 

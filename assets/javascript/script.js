@@ -15,6 +15,7 @@ let articleUrl;
 let dataUrl;
 let countryUrl;
 let country;
+<<<<<<< HEAD
 let globalInput;
 let googleOutput;
 let fullAddress;
@@ -25,6 +26,17 @@ $inputCard
   .fadeIn(900);
   
 $alertCard.hide();
+=======
+
+// Hide result divs on pageload, animate header and search button, run search function
+$(document).ready(function () {
+  $header.hide().fadeIn(2000);
+  $inputCard
+    .hide()
+    .delay(1000)
+    .fadeIn(2000);
+  $alertCard.hide();
+>>>>>>> e9507dbbf9b6be66f907c3849d6e2d2fb0216674
   $mapCard.hide();
   $newsCard.hide();
   $button.hide();
@@ -39,7 +51,7 @@ $(document).ready(function() {
 
 // Search function on enter press
 function input() {
-  $search.on("keypress", function(event) {
+  $search.on("keypress", function (event) {
     // If no value entered
     if (event.which === 13 && $search.val() === "") {
       event.preventDefault();
@@ -58,6 +70,7 @@ function input() {
       setTimeout(showCards, 1500);
       //console.log("[LOG] " + input);
 
+<<<<<<< HEAD
       //   Test appends
       let pDiv = $("#alertDiv");
       pDiv.text(input);
@@ -65,12 +78,15 @@ function input() {
       $li.text(input + " List Item(s)");
       $(".ulText").append($li);
 
+=======
+>>>>>>> e9507dbbf9b6be66f907c3849d6e2d2fb0216674
       //   Embed google map
       mapUrl =
         "https://www.google.com/maps/embed/v1/search?key=AIzaSyCv-DHBFYZNL-eaSZDKZRzE_BE5LpMcUe4&q=" +
         input;
       $("iframe").attr("src", mapUrl);
 
+<<<<<<< HEAD
       //call the google ajax function, which in turn calls wJax()
       gJax();
     }
@@ -132,6 +148,41 @@ function wJax() {
       $("#alertCard").append(dangerIcon);
       $("#alertCard").append(simpleAdvice);
       $("#alertCard").append(advisoryDescription);
+=======
+      // NYT Article Search
+      let articleUrl = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
+      articleUrl +=
+        "?" +
+        $.param({
+          "api-key": "86e69aec8bcd4924a738d6c56057f048",
+          q: input
+        });
+      $.ajax({
+        url: articleUrl,
+        method: "GET",
+        sort: "newest"
+      })
+      .then(function(response) {
+        let results = response.response.docs;
+        for (let i = 0; i < results.length; i++) {
+          let items = $("<li>");
+          let links = $("<a>");
+          items.append(links);
+          links.html(
+            "<h2>" +
+              results[i].headline.main +
+              "</h2>" +
+              results[i].snippet
+          );
+          links.attr("href", results[i].web_url);
+          links.attr('target', '_blank');
+          $("ul").append(items);
+        }
+      })
+      .fail(function(err) {
+        throw err;
+      });
+>>>>>>> e9507dbbf9b6be66f907c3849d6e2d2fb0216674
     }
   });
 }
@@ -148,7 +199,11 @@ function showCards() {
 
 // Reset page on button click
 function reset() {
+<<<<<<< HEAD
   $button.on("click", function() {
+=======
+  $button.on("click", function(event) {
+>>>>>>> e9507dbbf9b6be66f907c3849d6e2d2fb0216674
     //   Prevents dupicate click assignments
     event.preventDefault();
     $button.off("click");
