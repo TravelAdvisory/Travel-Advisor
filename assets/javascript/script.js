@@ -18,6 +18,7 @@ let country;
 let globalInput;
 let googleOutput;
 let fullAddress;
+
 // Hide result divs on pageload, animate header and search button, run search function
 $(document).ready(function () {
   $header.hide().fadeIn(2000);
@@ -67,6 +68,40 @@ function input() {
 
       //call the google ajax function, which in turn calls wJax()
       gJax();
+
+      // NYT Article Search
+      let articleUrl = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
+      articleUrl +=
+        "?" +
+        $.param({
+          "api-key": "86e69aec8bcd4924a738d6c56057f048",
+          q: input
+        });
+      $.ajax({
+        url: articleUrl,
+        method: "GET",
+        sort: "newest"
+      })
+      .then(function(response) {
+        let results = response.response.docs;
+        for (let i = 0; i < results.length; i++) {
+          let items = $("<li>");
+          let links = $("<a>");
+          items.append(links);
+          links.html(
+            "<h2>" +
+              results[i].headline.main +
+              "</h2>" +
+              results[i].snippet
+          );
+          links.attr("href", results[i].web_url);
+          links.attr('target', '_blank');
+          $("ul").append(items);
+        }
+      })
+      .fail(function(err) {
+        throw err;
+      });
     }
   });
 }
@@ -107,6 +142,7 @@ function wJax() {
       let advisoryDescription = $("<p>");
       let simpleAdvice = $("<p>");
       let dangerIcon = $("<img/>");
+      dangerIcon.addClass('imgBox');
       advisoryDescription.text(response.advisories.description);
       //display according text based on advisoryState level
       if (response.advisoryState == 0) {
@@ -127,40 +163,8 @@ function wJax() {
       $("#alertCard").append(simpleAdvice);
       $("#alertCard").append(advisoryDescription);
 
-      // NYT Article Search
-      let articleUrl = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
-      articleUrl +=
-        "?" +
-        $.param({
-          "api-key": "86e69aec8bcd4924a738d6c56057f048",
-          q: input
-        });
-      $.ajax({
-        url: articleUrl,
-        method: "GET",
-        sort: "newest"
-      })
-      .then(function(response) {
-        let results = response.response.docs;
-        for (let i = 0; i < results.length; i++) {
-          let items = $("<li>");
-          let links = $("<a>");
-          items.append(links);
-          links.html(
-            "<h2>" +
-              results[i].headline.main +
-              "</h2>" +
-              results[i].snippet
-          );
-          links.attr("href", results[i].web_url);
-          links.attr('target', '_blank');
-          $("ul").append(items);
-        }
-      })
-      .fail(function(err) {
-        throw err;
-      });
     }
+
   });
 }
 
@@ -196,6 +200,7 @@ function reset() {
     $newsCard.hide();
     $button.hide();
     $("select").material_select();
+    $("#alertCard").empty();
     input();
   });
 }
