@@ -15,6 +15,8 @@ let articleUrl;
 let dataUrl;
 let countryUrl;
 let country;
+let warningURL;
+let tempInput;
 
 // Hide result divs on pageload, animate header and search button, run search function
 $(document).ready(function() {
@@ -47,6 +49,7 @@ function input() {
       reset();
       $search.css("border-bottom", "2px solid rgb(9, 142, 14)");
       let input = $(this).val();
+      tempInput = input;
       $inputCard.delay(500).slideUp(1000);
       setTimeout(showCards, 1500);
       console.log("[LOG] " + input);
@@ -63,9 +66,29 @@ function input() {
         "https://www.google.com/maps/embed/v1/search?key=AIzaSyCv-DHBFYZNL-eaSZDKZRzE_BE5LpMcUe4&q=" +
         input;
       $("iframe").attr("src", mapUrl);
+
+      //   call the travel warning ajax request function
+      wJax();
+
     }
   });
 }
+
+
+//Travel Warning get and display function
+function wJax(){
+  warningURL = "https://api.tugo.com/v1/travelsafe/countries/" + tempInput;
+  $.ajax({
+    url: warningURL,
+    method: "GET"
+  })
+  .then(function(response) {
+    console.log(response);
+  });
+
+}
+
+
 
 // Show result cards
 function showCards() {
