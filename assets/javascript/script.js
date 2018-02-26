@@ -18,7 +18,6 @@ let country;
 let globalInput;
 let googleOutput;
 let fullAddress;
-
 // Hide result divs on pageload, animate header and search button, run search function
 $(document).ready(function () {
   $header.hide().fadeIn(2000);
@@ -53,8 +52,6 @@ function input() {
       globalInput = input;
       $inputCard.delay(500).slideUp(1000);
       setTimeout(showCards, 1500);
-      //console.log("[LOG] " + input);
-
       //   Test appends
       let pDiv = $("#alertDiv");
       pDiv.text(input);
@@ -129,6 +126,7 @@ function wJax() {
       $("#alertCard").append(dangerIcon);
       $("#alertCard").append(simpleAdvice);
       $("#alertCard").append(advisoryDescription);
+
       // NYT Article Search
       let articleUrl = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
       articleUrl +=
