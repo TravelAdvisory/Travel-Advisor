@@ -17,7 +17,7 @@ let countryUrl;
 let country;
 
 // Hide result divs on pageload, animate header and search button, run search function
-$(document).ready(function() {
+$(document).ready(function () {
   $header.hide().fadeIn(2000);
   $inputCard
     .hide()
@@ -33,7 +33,7 @@ $(document).ready(function() {
 
 // Search function on enter press
 function input() {
-  $search.on("keypress", function(event) {
+  $search.on("keypress", function (event) {
     // If no value entered
     if (event.which === 13 && $search.val() === "") {
       event.preventDefault();
@@ -127,4 +127,3 @@ function reset() {
     input();
   });
 }
-//test editing stuff
