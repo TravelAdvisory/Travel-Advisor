@@ -100,4 +100,3 @@ function reset() {
     input();
   });
 }
-//test editing stuff
