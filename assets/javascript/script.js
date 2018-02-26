@@ -77,7 +77,7 @@ function showCards() {
 
 // Reset page on button click
 function reset() {
-$button.on("click", function() {
+$button.on("click", function(event) {
   //   Prevents dupicate click assignments
   event.preventDefault();
   $button.off("click");
