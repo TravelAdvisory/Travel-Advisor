@@ -13,9 +13,10 @@
 </head>
 
 <body>
+
     <header class="container" name="top"></header>
 
-    <div class="row" id="mainCard">
+    <div class="row hidden" id="mainCard">
         <div class="col s12 center-align titleCard">
             <div class="card-content">
                 <span class="card-title center-align">Travel Advisor
@@ -24,12 +25,12 @@
             </div>
         </div>
     </div>
-    <a class="waves-effect waves-light btn" id="btn">New Search</a>
+    <a class="waves-effect waves-light btn hidden" id="btn">New Search</a>
     <main>
 
         <!-- Location Search -->
 
-        <div class="row" id="inputCard">
+        <div class="row hidden" id="inputCard">
             <div class="col s12 m6 offset-m3">
                 <div class="card inputBackground">
                     <div class="card-content">
@@ -50,7 +51,7 @@
 
         <div class="row">
             <div class="col s12 m6">
-                <div class="card" id="alertCard">
+                <div class="card hidden" id="alertCard">
                     <div class="card-content white-text">
                         <span class="card-title mainText alerts">Travel Information</span>
                         <p id="alertDiv"></p>
@@ -61,7 +62,7 @@
             <!-- Map -->
 
             <div class="col s12 m6">
-                <div class="card" id="mapCard">
+                <div class="card hidden" id="mapCard">
                     <div class="card-content white-text">
                         <span class="card-title mainText">Map</span>
                         <iframe min-height="450px" min-width="450px" frameborder="0" style="border:0"></iframe>
@@ -74,7 +75,7 @@
 
         <div class="row">
             <div class="col s12 m8 offset-m2 news">
-                <div class="card" id="newsCard">
+                <div class="card hidden" id="newsCard">
                     <div class="card-content">
                         <span class="card-title mainText">New York Times Newsfeed</span>
                         <ul class="ulText"></ul>
