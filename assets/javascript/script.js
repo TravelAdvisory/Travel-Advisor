@@ -51,18 +51,45 @@ function input() {
       setTimeout(showCards, 1500);
       console.log("[LOG] " + input);
 
-      //   Test appends
-      let pDiv = $('#alertDiv');
-      pDiv.text(input);
-      let $li = $("<li>");
-      $li.text(input + " List Item(s)");
-      $(".ulText").append($li);
-
       //   Embed google map
       mapUrl =
         "https://www.google.com/maps/embed/v1/search?key=AIzaSyCv-DHBFYZNL-eaSZDKZRzE_BE5LpMcUe4&q=" +
         input;
       $("iframe").attr("src", mapUrl);
+
+      // NYT Article Search
+      let articleUrl = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
+      articleUrl +=
+        "?" +
+        $.param({
+          "api-key": "86e69aec8bcd4924a738d6c56057f048",
+          q: input
+        });
+      $.ajax({
+        url: articleUrl,
+        method: "GET",
+        sort: "newest"
+      })
+      .then(function(response) {
+        let results = response.response.docs;
+        for (let i = 0; i < results.length; i++) {
+          let items = $("<li>");
+          let links = $("<a>");
+          items.append(links);
+          links.html(
+            "<h2>" +
+              results[i].headline.main +
+              "</h2>" +
+              results[i].snippet
+          );
+          links.attr("href", results[i].web_url);
+          links.attr('target', '_blank');
+          $("ul").append(items);
+        }
+      })
+      .fail(function(err) {
+        throw err;
+      });
     }
   });
 }
@@ -77,27 +104,27 @@ function showCards() {
 
 // Reset page on button click
 function reset() {
-$button.on("click", function(event) {
-  //   Prevents dupicate click assignments
-  event.preventDefault();
-  $button.off("click");
+  $button.on("click", function(event) {
+    //   Prevents dupicate click assignments
+    event.preventDefault();
+    $button.off("click");
 
-  //   Resets result divs and removes them from page, reloads search div, re-runs input function
-  $search.val("");
-  $search.css("border-bottom", "2px solid rgb(255, 255, 255)");
-  $search.off("focus");
-  $('p').html('');
-  $("ul").html('')
-  $inputCard
-    .hide()
-    .delay(500)
-    .fadeIn(1000);
-  $alertCard.hide();
-  $mapCard.hide();
-  $newsCard.hide();
-  $button.hide();
-  $("select").material_select();
-  input();
-});
+    //   Resets result divs and removes them from page, reloads search div, re-runs input function
+    $search.val("");
+    $search.css("border-bottom", "2px solid rgb(255, 255, 255)");
+    $search.off("focus");
+    $("p").html("");
+    $("ul").html("");
+    $inputCard
+      .hide()
+      .delay(500)
+      .fadeIn(1000);
+    $alertCard.hide();
+    $mapCard.hide();
+    $newsCard.hide();
+    $button.hide();
+    $("select").material_select();
+    input();
+  });
 }
 //test editing stuff
