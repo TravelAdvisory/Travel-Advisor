@@ -9,6 +9,16 @@ let $button = $("#btn");
 // Location Input
 let $search = $("#location_input");
 
+// Global Variables
+let mapUrl;
+let articleUrl;
+let dataUrl;
+let countryUrl;
+let country;
+let globalInput;
+let googleOutput;
+let fullAddress;
+
 
 // Hide result divs on pageload, animate header and search button, run search function
 $(document).ready(function () {
@@ -37,19 +47,18 @@ function input() {
       reset();
       $search.css("border-bottom", "2px solid rgb(9, 142, 14)");
       let input = $(this).val();
-      var globalInput = input;
+      globalInput = input;
       $inputCard.delay(500).slideUp(1000);
       setTimeout(showCards, 1500);
 
       //   Embed google map
-      let mapUrl =
+      mapUrl =
         "https://www.google.com/maps/embed/v1/search?key=AIzaSyCv-DHBFYZNL-eaSZDKZRzE_BE5LpMcUe4&q=" +
         input;
       $("iframe").attr("src", mapUrl);
 
       //call the google ajax function, which in turn calls wJax()
-      gJax(globalInput);
-
+      gJax();
       // NYT Article Search
       let articleUrl = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
       articleUrl +=
@@ -88,26 +97,32 @@ function input() {
 }
 
 //ajax call the google map api to get a country code which is used in wJax()
-function gJax(globalInput) {
+function gJax() {
   $.ajax({
     url:
-      "https://maps.googleapis.com/maps/api/geocode/json?address=" +
+      "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyC-zLL68b3BowsdrZ92ot7Zfi91gT8X82s&address=" +
       globalInput,
     method: "GET"
   }).then(function(response) {
     var res = response.results;
+    console.log(response);
     $("#alertDiv").text(res[0].formatted_address);
     for (var i = 0; i < res[0].address_components.length; i++) {
       if (res[0].address_components[i].types[0] == "country") {
-        var googleOutput = res[0].address_components[i].short_name;
+        googleOutput = res[0].address_components[i].short_name;
       }
     }
-    wJax(googleOutput);
+    longitude = parseInt(res[0].geometry.location.lng);
+    lattitude =  parseInt(res[0].geometry.location.lat);
+    console.log("long:" + longitude);
+    console.log("lat:" + lattitude);
+    wJax();
+    initMap();
   });
 }
 
-//pull and display travel warning based on the country code gJax() provides
-function wJax(googleOutput) {
+//pull and display travel warning based on the country code gJax() provides, and the cordinates used in initMap
+function wJax() {
   console.log(googleOutput);
   $.ajax({
     url: "https://api.tugo.com/v1/travelsafe/countries/" + googleOutput,
@@ -123,7 +138,6 @@ function wJax(googleOutput) {
       let advisoryDescription = $("<p>");
       let simpleAdvice = $("<p>");
       let dangerIcon = $("<img/>");
-      dangerIcon.addClass('imgBox');
       advisoryDescription.text(response.advisories.description);
       //display according text based on advisoryState level
       if (response.advisoryState == 0) {
@@ -139,10 +153,10 @@ function wJax(googleOutput) {
       {
         simpleAdvice.text("Advice: Do not travel");
         dangerIcon.attr("src","assets/images/level3.png");
-      }
-      $("#alertCard").append(dangerIcon);
-      $("#alertCard").append(simpleAdvice);
-      $("#alertCard").append(advisoryDescription);
+      } 
+   //   $("#alertDiv").append(dangerIcon);
+      $("#alertDiv").append(simpleAdvice);
+      $("#alertDiv").append(advisoryDescription);
 
     }
 
@@ -183,5 +197,19 @@ function reset() {
     $("select").material_select();
     $("#alertCard").empty();
     input();
+  });
+}
+
+//loads google interactive map based on the long and latt
+
+function initMap() {
+  var cordinates = {lat: lattitude, lng: longitude};
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 4,
+    center: cordinates
+  });
+  var marker = new google.maps.Marker({
+    position: cordinates,
+    map: map
   });
 }
