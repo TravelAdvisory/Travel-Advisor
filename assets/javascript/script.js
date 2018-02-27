@@ -18,8 +18,7 @@ let country;
 let globalInput;
 let googleOutput;
 let fullAddress;
-let longitude;
-let lattitude;
+
 
 // Hide result divs on pageload, animate header and search button, run search function
 $(document).ready(function () {
@@ -145,7 +144,6 @@ function wJax() {
       let advisoryDescription = $("<p>");
       let simpleAdvice = $("<p>");
       let dangerIcon = $("<img/>");
-      dangerIcon.addClass('imgBox');
       advisoryDescription.text(response.advisories.description);
       //display according text based on advisoryState level
       if (response.advisoryState == 0) {
@@ -161,10 +159,10 @@ function wJax() {
       {
         simpleAdvice.text("Advice: Do not travel");
         dangerIcon.attr("src","assets/images/level3.png");
-      }
-      $("#alertCard").append(dangerIcon);
-      $("#alertCard").append(simpleAdvice);
-      $("#alertCard").append(advisoryDescription);
+      } 
+   //   $("#alertDiv").append(dangerIcon);
+      $("#alertDiv").append(simpleAdvice);
+      $("#alertDiv").append(advisoryDescription);
 
     }
 
