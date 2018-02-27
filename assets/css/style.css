@@ -29,9 +29,9 @@ body {
     background-color: rgba(240, 233, 233, 0.05);
   }
 
-  h2, 
-  p {
-    font-size: 1.25rem;
+  h2
+   {
+    font-size: 1.5rem;
   }
   
   span, 
@@ -43,6 +43,7 @@ body {
   .mainText, 
   .ulText, 
   p,
+  #alertDiv,
   .copyright, 
   a.footlink, 
   a.footlink:hover 
@@ -80,12 +81,13 @@ body {
   #mapCard, 
   #newsCard {
     position: relative;
+    padding: 20px;
+    text-align: center;
   }
   .imgBox{
     text-align:center;
     max-height:80px;
     max-width:80px;
-    margin-left:42%; /* TODO: Figure out the correct way to do this */
   }
 
   #inputCard {
@@ -118,12 +120,11 @@ body {
   
   #alertCard,
   #mapCard {
-    min-height: 300px;
+    min-height: 100%;
   }
   
   .mainText, 
-  .ulText, 
-  p {
+  .ulText {
     text-align: center;
     font-size: 1.5rem;
   }
