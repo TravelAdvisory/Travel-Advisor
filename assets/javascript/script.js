@@ -98,7 +98,7 @@ function gJax(globalInput) {
     $("#alertDiv").text(res[0].formatted_address);
     for (var i = 0; i < res[0].address_components.length; i++) {
       if (res[0].address_components[i].types[0] == "country") {
-        let googleOutput = res[0].address_components[i].short_name;
+        var googleOutput = res[0].address_components[i].short_name;
       }
     }
     longitude = parseInt(res[0].geometry.location.lng);
@@ -110,7 +110,6 @@ function gJax(globalInput) {
 
 //pull and display travel warning based on the country code gJax() provides, and the cordinates used in initMap
 function wJax(googleOutput) {
-  console.log(googleOutput);
   $.ajax({
     url: "https://api.tugo.com/v1/travelsafe/countries/" + googleOutput,
     headers: {
