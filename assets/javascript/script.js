@@ -89,15 +89,16 @@ function input() {
 function gJax(globalInput) {
   $.ajax({
     url:
-      "https://maps.googleapis.com/maps/api/geocode/json?address=" +
+      "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyC-zLL68b3BowsdrZ92ot7Zfi91gT8X82s&address=" +
       globalInput,
     method: "GET"
   }).then(function(response) {
     var res = response.results;
+    console.log(response);
     $("#alertDiv").text(res[0].formatted_address);
     for (var i = 0; i < res[0].address_components.length; i++) {
       if (res[0].address_components[i].types[0] == "country") {
-        var googleOutput = res[0].address_components[i].short_name;
+        let googleOutput = res[0].address_components[i].short_name;
       }
     }
     longitude = parseInt(res[0].geometry.location.lng);
@@ -107,7 +108,7 @@ function gJax(globalInput) {
   });
 }
 
-//pull and display travel warning based on the country code gJax() provides
+//pull and display travel warning based on the country code gJax() provides, and the cordinates used in initMap
 function wJax(googleOutput) {
   console.log(googleOutput);
   $.ajax({

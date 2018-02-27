@@ -75,7 +75,8 @@ body {
     font-size: 2rem;
     position: relative;
   }
-  
+
+
   #inputCard,
   #alertCard,
   #mapCard, 
@@ -123,6 +124,10 @@ body {
     min-height: 100%;
   }
   
+#map {
+  height:360px;
+}
+
   .mainText, 
   .ulText {
     text-align: center;
@@ -167,4 +172,5 @@ body {
   a.footlink:hover {
     font-size: .95rem;
   }
+  
   
