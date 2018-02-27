@@ -43,6 +43,7 @@ body {
   .mainText, 
   .ulText, 
   p,
+  #alertDiv,
   .copyright, 
   a.footlink, 
   a.footlink:hover 
@@ -80,12 +81,13 @@ body {
   #mapCard, 
   #newsCard {
     position: relative;
+    padding: 20px;
+    text-align: center;
   }
   .imgBox{
     text-align:center;
     max-height:80px;
     max-width:80px;
-    margin-left:42%; /* TODO: Figure out the correct way to do this */
   }
 
   #inputCard {
