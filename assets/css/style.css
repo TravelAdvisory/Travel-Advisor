@@ -20,9 +20,18 @@ body {
   .row {
     margin-bottom: 1px;
   }
+
+  .hidden {
+    display: none;
+  }
   
   .page-header {
     background-color: rgba(240, 233, 233, 0.05);
+  }
+
+  h2, 
+  p {
+    font-size: 1.25rem;
   }
   
   span, 
@@ -71,6 +80,12 @@ body {
   #mapCard, 
   #newsCard {
     position: relative;
+  }
+  .imgBox{
+    text-align:center;
+    max-height:80px;
+    max-width:80px;
+    margin-left:42%; /* TODO: Figure out the correct way to do this */
   }
 
   #inputCard {
