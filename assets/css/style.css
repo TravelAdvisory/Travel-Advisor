@@ -108,7 +108,7 @@ body {
   
   #alertCard,
   #mapCard {
-    min-height: 300px;
+    min-height: 100%;
   }
   
   .mainText, 
