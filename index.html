@@ -63,12 +63,15 @@
             <div class="col s12 m6">
                 <div class="card hidden" id="mapCard">
                     <div class="card-content white-text">
-                        <span class="card-title mainText">Map</span>
-                        <iframe min-height="450px" min-width="450px" frameborder="0" style="border:0"></iframe>
+                            <div id="map"></div>
+                        <!-- <span class="card-title mainText">Map</span>
+                        <iframe min-height="450px" min-width="450px" frameborder="0" style="border:0"></iframe> -->
                     </div>
-                </div>
+                </div>  
             </div>
         </div>
+       
+            
 
         <!-- News -->
 
@@ -89,7 +92,9 @@
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
     <script src="assets/javascript/script.js"></script>
-
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDaF5ltS92Dtpf8NrjeXVnCpooKd0zlwxM&callback=initMap">
+    </script>
 </body>
 
 <div class="container">

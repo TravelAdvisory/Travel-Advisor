@@ -18,6 +18,8 @@ let country;
 let globalInput;
 let googleOutput;
 let fullAddress;
+let longitude;
+let lattitude;
 
 // Hide result divs on pageload, animate header and search button, run search function
 $(document).ready(function () {
@@ -106,17 +108,22 @@ function input() {
 function gJax() {
   $.ajax({
     url:
-      "https://maps.googleapis.com/maps/api/geocode/json?address=" +
+      "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyC-zLL68b3BowsdrZ92ot7Zfi91gT8X82s&address=" +
       globalInput,
     method: "GET"
   }).then(function(response) {
     var res = response.results;
+    console.log(response);
     $("#alertDiv").text(res[0].formatted_address);
     for (var i = 0; i < res[0].address_components.length; i++) {
       if (res[0].address_components[i].types[0] == "country") {
         googleOutput = res[0].address_components[i].short_name;
       }
     }
+    longitude = res[0].geometry.location.lng;
+    lattitude = res[0].geometry.location.lat;
+    console.log("long:" + longitude);
+    console.log("lat:" + lattitude);
     wJax();
   });
 }
