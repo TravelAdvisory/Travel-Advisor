@@ -29,9 +29,9 @@ body {
     background-color: rgba(240, 233, 233, 0.05);
   }
 
-  h2, 
-  p {
-    font-size: 1.25rem;
+  h2
+   {
+    font-size: 1.5rem;
   }
   
   span, 
@@ -122,8 +122,7 @@ body {
   }
   
   .mainText, 
-  .ulText, 
-  p {
+  .ulText {
     text-align: center;
     font-size: 1.5rem;
   }
