@@ -9,6 +9,7 @@ let $button = $("#btn");
 // Location Input
 let $search = $("#location_input");
 
+<<<<<<< HEAD
 // Global Variables
 let mapUrl;
 let articleUrl;
@@ -23,6 +24,8 @@ let globalInput;
 let googleOutput;
 let fullAddress;
 >>>>>>> af5e53300e616c45e553b5cfe488de22d538cab4
+=======
+>>>>>>> b9a8300f78d4885fa3a1aa1e1e2f7f577fa4e655
 
 // Hide result divs on pageload, animate header and search button, run search function
 $(document).ready(function () {
@@ -52,10 +55,14 @@ function input() {
       $search.css("border-bottom", "2px solid rgb(9, 142, 14)");
       let input = $(this).val();
 <<<<<<< HEAD
+<<<<<<< HEAD
       tempInput = input;
 =======
       globalInput = input;
 >>>>>>> af5e53300e616c45e553b5cfe488de22d538cab4
+=======
+      var globalInput = input;
+>>>>>>> b9a8300f78d4885fa3a1aa1e1e2f7f577fa4e655
       $inputCard.delay(500).slideUp(1000);
       setTimeout(showCards, 1500);
       //   Test appends
@@ -66,7 +73,7 @@ function input() {
       $(".ulText").append($li);
 
       //   Embed google map
-      mapUrl =
+      let mapUrl =
         "https://www.google.com/maps/embed/v1/search?key=AIzaSyCv-DHBFYZNL-eaSZDKZRzE_BE5LpMcUe4&q=" +
         input;
       $("iframe").attr("src", mapUrl);
@@ -76,7 +83,7 @@ function input() {
       wJax();
 =======
       //call the google ajax function, which in turn calls wJax()
-      gJax();
+      gJax(globalInput);
 
       // NYT Article Search
       let articleUrl = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
@@ -116,7 +123,7 @@ function input() {
 }
 
 //ajax call the google map api to get a country code which is used in wJax()
-function gJax() {
+function gJax(globalInput) {
   $.ajax({
     url:
       "https://maps.googleapis.com/maps/api/geocode/json?address=" +
@@ -127,15 +134,15 @@ function gJax() {
     $("#alertDiv").text(res[0].formatted_address);
     for (var i = 0; i < res[0].address_components.length; i++) {
       if (res[0].address_components[i].types[0] == "country") {
-        googleOutput = res[0].address_components[i].short_name;
+        var googleOutput = res[0].address_components[i].short_name;
       }
     }
-    wJax();
+    wJax(googleOutput);
   });
 }
 
 //pull and display travel warning based on the country code gJax() provides
-function wJax() {
+function wJax(googleOutput) {
   console.log(googleOutput);
   $.ajax({
     url: "https://api.tugo.com/v1/travelsafe/countries/" + googleOutput,
