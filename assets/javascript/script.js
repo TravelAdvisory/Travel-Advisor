@@ -109,7 +109,7 @@ function gJax(globalInput) {
 }
 
 //pull and display travel warning based on the country code gJax() provides, and the cordinates used in initMap
-function wJax() {
+function wJax(googleOutput) {
   console.log(googleOutput);
   $.ajax({
     url: "https://api.tugo.com/v1/travelsafe/countries/" + googleOutput,
