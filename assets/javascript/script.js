@@ -92,9 +92,10 @@ function gJax(globalInput) {
   $.ajax({
     url:
       "https://maps.googleapis.com/maps/api/geocode/json?address=" +
-      globalInput,
+      globalInput + "&key=AIzaSyDDb1773cMxYPHcZaqKujBLjPEGhRFL0lE",
     method: "GET"
   }).then(function(response) {
+    console.log(response);
     var res = response.results;
     $("#alertDiv").text(res[0].formatted_address);
     for (var i = 0; i < res[0].address_components.length; i++) {
@@ -181,7 +182,8 @@ function reset() {
     $newsCard.hide();
     $button.hide();
     $("select").material_select();
-    $("#alertCard").empty();
+    $("#alertDiv").empty();
+    $('.imgBox').remove();
     input();
   });
 }
