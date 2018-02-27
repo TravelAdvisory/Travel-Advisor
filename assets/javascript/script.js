@@ -86,7 +86,7 @@ function input() {
 }
 
 //ajax call the google map api to get a country code which is used in wJax()
-function gJax() {
+function gJax(globalInput) {
   $.ajax({
     url:
       "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyC-zLL68b3BowsdrZ92ot7Zfi91gT8X82s&address=" +
