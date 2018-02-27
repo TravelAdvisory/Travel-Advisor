@@ -49,31 +49,25 @@ function input() {
       gJax(input);
 
       // NYT Article Search
-      let articleUrl = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
-      articleUrl +=
-        "?" +
-        $.param({
-          "api-key": "86e69aec8bcd4924a738d6c56057f048",
-          q: input
-        });
+      let articleUrl = "https://newsapi.org/v2/everything?q=" 
+      + input + "&sortBy=popularity&apiKey=ef784bd059054855ac2bcbb58bf7335e"
       $.ajax({
         url: articleUrl,
         method: "GET",
-        sort: "newest"
       })
       .then(function(response) {
         console.log(response);
-        let results = response.response.docs;
-        for (let i = 0; i < results.length; i++) {
+        let results = response.articles;
+        for (let i = 0; i < 10; i++) {
           let items = $("<li>");
           let links = $("<a>");
           items.append(links);
           links.html(
             "<h2>" +
-              results[i].headline.main +
-              "</h2>" + results[i].snippet 
+              results[i].title +
+              "</h2>" + results[i].description
             );
-          links.attr("href", results[i].web_url);
+          links.attr("href", results[i].url);
           links.attr('target', '_blank');
           $("ul").append(items);
         }
@@ -89,10 +83,11 @@ function input() {
 function gJax(globalInput) {
   $.ajax({
     url:
-      "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyC-zLL68b3BowsdrZ92ot7Zfi91gT8X82s&address=" +
-      globalInput,
+      "https://maps.googleapis.com/maps/api/geocode/json?address=" +
+      globalInput + "&key=AIzaSyDDb1773cMxYPHcZaqKujBLjPEGhRFL0lE",
     method: "GET"
   }).then(function(response) {
+    console.log(response);
     var res = response.results;
     console.log(response);
     $("#alertDiv").text(res[0].formatted_address);
@@ -179,7 +174,8 @@ function reset() {
     $newsCard.hide();
     $button.hide();
     $("select").material_select();
-    $("#alertCard").empty();
+    $("#alertDiv").empty();
+    $('.imgBox').remove();
     input();
   });
 }
