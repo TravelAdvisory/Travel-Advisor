@@ -66,7 +66,6 @@ function input() {
 
       //call the google ajax function, which in turn calls wJax()
       gJax();
-
       // NYT Article Search
       let articleUrl = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
       articleUrl +=
@@ -120,15 +119,16 @@ function gJax() {
         googleOutput = res[0].address_components[i].short_name;
       }
     }
-    longitude = res[0].geometry.location.lng;
-    lattitude = res[0].geometry.location.lat;
+    longitude = parseInt(res[0].geometry.location.lng);
+    lattitude =  parseInt(res[0].geometry.location.lat);
     console.log("long:" + longitude);
     console.log("lat:" + lattitude);
     wJax();
+    initMap();
   });
 }
 
-//pull and display travel warning based on the country code gJax() provides
+//pull and display travel warning based on the country code gJax() provides, and the cordinates used in initMap
 function wJax() {
   console.log(googleOutput);
   $.ajax({
@@ -205,5 +205,19 @@ function reset() {
     $("select").material_select();
     $("#alertCard").empty();
     input();
+  });
+}
+
+//loads google interactive map based on the long and latt
+
+function initMap() {
+  var cordinates = {lat: lattitude, lng: longitude};
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 4,
+    center: cordinates
+  });
+  var marker = new google.maps.Marker({
+    position: cordinates,
+    map: map
   });
 }
