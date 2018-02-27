@@ -9,24 +9,6 @@ let $button = $("#btn");
 // Location Input
 let $search = $("#location_input");
 
-<<<<<<< HEAD
-// Global Variables
-let mapUrl;
-let articleUrl;
-let dataUrl;
-let countryUrl;
-let country;
-<<<<<<< HEAD
-let warningURL;
-let tempInput;
-=======
-let globalInput;
-let googleOutput;
-let fullAddress;
->>>>>>> af5e53300e616c45e553b5cfe488de22d538cab4
-=======
->>>>>>> b9a8300f78d4885fa3a1aa1e1e2f7f577fa4e655
-
 // Hide result divs on pageload, animate header and search button, run search function
 $(document).ready(function () {
   $header.hide().fadeIn(2000);
@@ -54,15 +36,6 @@ function input() {
       reset();
       $search.css("border-bottom", "2px solid rgb(9, 142, 14)");
       let input = $(this).val();
-<<<<<<< HEAD
-<<<<<<< HEAD
-      tempInput = input;
-=======
-      globalInput = input;
->>>>>>> af5e53300e616c45e553b5cfe488de22d538cab4
-=======
-      var globalInput = input;
->>>>>>> b9a8300f78d4885fa3a1aa1e1e2f7f577fa4e655
       $inputCard.delay(500).slideUp(1000);
       setTimeout(showCards, 1500);
 
@@ -72,12 +45,8 @@ function input() {
         input;
       $("iframe").attr("src", mapUrl);
 
-<<<<<<< HEAD
-      //   call the travel warning ajax request function
-      wJax();
-=======
       //call the google ajax function, which in turn calls wJax()
-      gJax(globalInput);
+      gJax(input);
 
       // NYT Article Search
       let articleUrl = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
@@ -131,7 +100,10 @@ function gJax(globalInput) {
         var googleOutput = res[0].address_components[i].short_name;
       }
     }
+    longitude = parseInt(res[0].geometry.location.lng);
+    lattitude =  parseInt(res[0].geometry.location.lat);
     wJax(googleOutput);
+    initMap();
   });
 }
 
@@ -151,53 +123,31 @@ function wJax(googleOutput) {
     function displayWarning() {
       let advisoryDescription = $("<p>");
       let simpleAdvice = $("<p>");
-      let dangerIcon = $("<img/>");
-      dangerIcon.addClass('imgBox');
+      // let dangerIcon = $("<img/>");
+      // dangerIcon.addClass('imgBox');
       advisoryDescription.text(response.advisories.description);
       //display according text based on advisoryState level
       if (response.advisoryState == 0) {
         simpleAdvice.text("Advice: Proceed with normal precautions");
-        dangerIcon.attr("src","assets/images/level0.png");
+        // dangerIcon.attr("src","assets/images/level0.png");
       } else if (response.advisoryState == 1) {
         simpleAdvice.text("Advice: Excercise increased caution");
-        dangerIcon.attr("src","assets/images/level1.png");
+        // dangerIcon.attr("src","assets/images/level1.png");
       } else if (response.advisoryState == 2) {
         simpleAdvice.text("Advice: Reconsider destination");
-        dangerIcon.attr("src","assets/images/level2.png");
+        // dangerIcon.attr("src","assets/images/level2.png");
       } else 
       {
         simpleAdvice.text("Advice: Do not travel");
-        dangerIcon.attr("src","assets/images/level3.png");
+        //dangerIcon.attr("src","assets/images/level3.png");
       }
-      $("#alertCard").append(dangerIcon);
       $("#alertCard").append(simpleAdvice);
       $("#alertCard").append(advisoryDescription);
->>>>>>> af5e53300e616c45e553b5cfe488de22d538cab4
 
     }
 
   });
 }
-
-<<<<<<< HEAD
-
-//Travel Warning get and display function
-function wJax(){
-  warningURL = "https://api.tugo.com/v1/travelsafe/countries/" + tempInput;
-  $.ajax({
-    url: warningURL,
-    method: "GET"
-  })
-  .then(function(response) {
-    console.log(response);
-  });
-
-}
-
-
-=======
-// Display County Warnings
->>>>>>> af5e53300e616c45e553b5cfe488de22d538cab4
 
 // Show result cards
 function showCards() {
@@ -231,5 +181,17 @@ function reset() {
     $("select").material_select();
     $("#alertCard").empty();
     input();
+  });
+}
+
+function initMap() {
+  var cordinates = {lat: lattitude, lng: longitude};
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 4,
+    center: cordinates
+  });
+  var marker = new google.maps.Marker({
+    position: cordinates,
+    map: map
   });
 }
