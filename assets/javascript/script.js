@@ -26,10 +26,6 @@ $(document).ready(function () {
     .hide()
     .delay(1000)
     .fadeIn(2000);
-  $alertCard.hide();
-  $mapCard.hide();
-  $newsCard.hide();
-  $button.hide(); 
   $("select").material_select();
   input();
 });
