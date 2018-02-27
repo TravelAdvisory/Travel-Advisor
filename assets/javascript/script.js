@@ -9,7 +9,6 @@ let $button = $("#btn");
 // Location Input
 let $search = $("#location_input");
 
-
 // Hide result divs on pageload, animate header and search button, run search function
 $(document).ready(function () {
   $header.hide().fadeIn(2000);
@@ -37,7 +36,6 @@ function input() {
       reset();
       $search.css("border-bottom", "2px solid rgb(9, 142, 14)");
       let input = $(this).val();
-      var globalInput = input;
       $inputCard.delay(500).slideUp(1000);
       setTimeout(showCards, 1500);
 
@@ -48,7 +46,7 @@ function input() {
       $("iframe").attr("src", mapUrl);
 
       //call the google ajax function, which in turn calls wJax()
-      gJax(globalInput);
+      gJax(input);
 
       // NYT Article Search
       let articleUrl = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
@@ -102,7 +100,10 @@ function gJax(globalInput) {
         var googleOutput = res[0].address_components[i].short_name;
       }
     }
+    longitude = parseInt(res[0].geometry.location.lng);
+    lattitude =  parseInt(res[0].geometry.location.lat);
     wJax(googleOutput);
+    initMap();
   });
 }
 
@@ -122,25 +123,24 @@ function wJax(googleOutput) {
     function displayWarning() {
       let advisoryDescription = $("<p>");
       let simpleAdvice = $("<p>");
-      let dangerIcon = $("<img/>");
-      dangerIcon.addClass('imgBox');
+      // let dangerIcon = $("<img/>");
+      // dangerIcon.addClass('imgBox');
       advisoryDescription.text(response.advisories.description);
       //display according text based on advisoryState level
       if (response.advisoryState == 0) {
         simpleAdvice.text("Advice: Proceed with normal precautions");
-        dangerIcon.attr("src","assets/images/level0.png");
+        // dangerIcon.attr("src","assets/images/level0.png");
       } else if (response.advisoryState == 1) {
         simpleAdvice.text("Advice: Excercise increased caution");
-        dangerIcon.attr("src","assets/images/level1.png");
+        // dangerIcon.attr("src","assets/images/level1.png");
       } else if (response.advisoryState == 2) {
         simpleAdvice.text("Advice: Reconsider destination");
-        dangerIcon.attr("src","assets/images/level2.png");
+        // dangerIcon.attr("src","assets/images/level2.png");
       } else 
       {
         simpleAdvice.text("Advice: Do not travel");
-        dangerIcon.attr("src","assets/images/level3.png");
+        //dangerIcon.attr("src","assets/images/level3.png");
       }
-      $("#alertCard").append(dangerIcon);
       $("#alertCard").append(simpleAdvice);
       $("#alertCard").append(advisoryDescription);
 
@@ -148,8 +148,6 @@ function wJax(googleOutput) {
 
   });
 }
-
-// Display County Warnings
 
 // Show result cards
 function showCards() {
@@ -183,5 +181,17 @@ function reset() {
     $("select").material_select();
     $("#alertCard").empty();
     input();
+  });
+}
+
+function initMap() {
+  var cordinates = {lat: lattitude, lng: longitude};
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 4,
+    center: cordinates
+  });
+  var marker = new google.maps.Marker({
+    position: cordinates,
+    map: map
   });
 }
