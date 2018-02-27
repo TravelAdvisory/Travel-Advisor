@@ -96,8 +96,8 @@ function gJax(globalInput) {
         var googleOutput = res[0].address_components[i].short_name;
       }
     }
-    longitude = parseInt(res[0].geometry.location.lng);
-    lattitude =  parseInt(res[0].geometry.location.lat);
+    longitude = parseFloat(res[0].geometry.location.lng);
+    lattitude =  parseFloat(res[0].geometry.location.lat);
     wJax(googleOutput);
     initMap();
   });
