@@ -40,7 +40,7 @@ function input() {
       setTimeout(showCards, 1500);
 
       //   Embed google map
-      mapUrl =
+      let mapUrl =
         "https://www.google.com/maps/embed/v1/search?key=AIzaSyCv-DHBFYZNL-eaSZDKZRzE_BE5LpMcUe4&q=" +
         input;
       $("iframe").attr("src", mapUrl);
@@ -98,7 +98,7 @@ function gJax(globalInput) {
     $("#alertDiv").text(res[0].formatted_address);
     for (var i = 0; i < res[0].address_components.length; i++) {
       if (res[0].address_components[i].types[0] == "country") {
-        googleOutput = res[0].address_components[i].short_name;
+        let googleOutput = res[0].address_components[i].short_name;
       }
     }
     longitude = parseInt(res[0].geometry.location.lng);
