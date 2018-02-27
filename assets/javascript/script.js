@@ -65,12 +65,6 @@ function input() {
 >>>>>>> b9a8300f78d4885fa3a1aa1e1e2f7f577fa4e655
       $inputCard.delay(500).slideUp(1000);
       setTimeout(showCards, 1500);
-      //   Test appends
-      let pDiv = $("#alertDiv");
-      pDiv.text(input);
-      let $li = $("<li>");
-      $li.text(input + " List Item(s)");
-      $(".ulText").append($li);
 
       //   Embed google map
       let mapUrl =
@@ -99,6 +93,7 @@ function input() {
         sort: "newest"
       })
       .then(function(response) {
+        console.log(response);
         let results = response.response.docs;
         for (let i = 0; i < results.length; i++) {
           let items = $("<li>");
@@ -107,9 +102,8 @@ function input() {
           links.html(
             "<h2>" +
               results[i].headline.main +
-              "</h2>" +
-              results[i].snippet
-          );
+              "</h2>" + results[i].snippet 
+            );
           links.attr("href", results[i].web_url);
           links.attr('target', '_blank');
           $("ul").append(items);
