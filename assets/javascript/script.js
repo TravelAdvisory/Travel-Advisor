@@ -68,7 +68,7 @@ function input() {
             );
             links.attr("href", results[i].url);
             links.attr("target", "_blank");
-            $("ul").append(items);
+            $(".ulText").append(items);
           }
         })
         .fail(function(err) {
@@ -77,68 +77,86 @@ function input() {
     }
   });
 
-  //ajax call the google map api to get a country code which is used in wJax()
-  function gJax(globalInput) {
-    $.ajax({
-      url:
-        "https://maps.googleapis.com/maps/api/geocode/json?address=" +
-        globalInput +
-        "&key=AIzaSyDDb1773cMxYPHcZaqKujBLjPEGhRFL0lE",
-      method: "GET"
-    }).then(function(response) {
-      console.log(response);
-      var res = response.results;
-      console.log(response);
-      $("#alertDiv").text(res[0].formatted_address);
-      for (var i = 0; i < res[0].address_components.length; i++) {
-        if (res[0].address_components[i].types[0] == "country") {
-          var googleOutput = res[0].address_components[i].short_name;
-        }
+//ajax call the google map api to get a country code which is used in wJax()
+function gJax(globalInput) {
+  $.ajax({
+    url:
+      "https://maps.googleapis.com/maps/api/geocode/json?address=" +
+      globalInput +
+      "&key=AIzaSyDDb1773cMxYPHcZaqKujBLjPEGhRFL0lE",
+    method: "GET"
+  }).then(function(response) {
+    console.log(response);
+    var res = response.results;
+    console.log(response);
+    $("#alertDiv").text(res[0].formatted_address);
+    for (var i = 0; i < res[0].address_components.length; i++) {
+      if (res[0].address_components[i].types[0] == "country") {
+        var googleOutput = res[0].address_components[i].short_name;
       }
-      longitude = parseFloat(res[0].geometry.location.lng);
-      lattitude = parseFloat(res[0].geometry.location.lat);
-      wJax(googleOutput);
-      initMap();
-    });
-  }
+    }
+    longitude = parseFloat(res[0].geometry.location.lng);
+    lattitude = parseFloat(res[0].geometry.location.lat);
+    wJax(googleOutput);
+    initMap();
+  });
+}
 
-  //pull and display travel warning based on the country code gJax() provides, and the cordinates used in initMap
-  function wJax(googleOutput) {
-    $.ajax({
-      url: "https://api.tugo.com/v1/travelsafe/countries/" + googleOutput,
-      headers: {
-        "X-Auth-API-Key": "kew824h7b2xpjnw9aadbrq6k"
-      },
-      method: "GET"
-    }).then(function(response) {
-      console.log(response);
-      displayWarning();
+//pull and display travel warning based on the country code gJax() provides, and the cordinates used in initMap
+function wJax(googleOutput) {
+  $.ajax({
+    url: "https://api.tugo.com/v1/travelsafe/countries/" + googleOutput,
+    headers: {
+      "X-Auth-API-Key": "kew824h7b2xpjnw9aadbrq6k"
+    },
+    method: "GET"
+  }).then(function(response) {
+    console.log(response);
+    displayWarning();
 
-      function displayWarning() {
-        let advisoryDescription = $("<p>");
-        let simpleAdvice = $("<p>");
-        // let dangerIcon = $("<img/>");
-        // dangerIcon.addClass('imgBox');
-        advisoryDescription.text(response.advisories.description);
-        //display according text based on advisoryState level
-        if (response.advisoryState == 0) {
-          simpleAdvice.text("Advice: Proceed with normal precautions");
-          // dangerIcon.attr("src","assets/images/level0.png");
-        } else if (response.advisoryState == 1) {
-          simpleAdvice.text("Advice: Excercise increased caution");
-          // dangerIcon.attr("src","assets/images/level1.png");
-        } else if (response.advisoryState == 2) {
-          simpleAdvice.text("Advice: Reconsider destination");
-          // dangerIcon.attr("src","assets/images/level2.png");
-        } else {
-          simpleAdvice.text("Advice: Do not travel");
-          //dangerIcon.attr("src","assets/images/level3.png");
-        }
-        $("#alertCard").append(simpleAdvice);
-        $("#alertCard").append(advisoryDescription);
+    function displayWarning() {
+      let advisoryDescription = $("<p>");
+      let simpleAdvice = $("<p>");
+      advisoryDescription.text(response.advisories.description);
+      if (response.advisoryState == 0) {
+        simpleAdvice.text("Advice: Proceed as normal");
+      } else if (response.advisoryState == 1) {
+        simpleAdvice.text("Advice: Excercise increased caution");
+      } else if (response.advisoryState == 2) {
+        simpleAdvice.text("Advice: Reconsider destination");
+      } else {
+        simpleAdvice.text("Advice: Do not travel");
       }
+      for (var i = 0; i < response.safety.safetyInfo.length; i++) {
+        let newDiv = $("<li>");
+        newDiv.append(
+          '<a href="#!" class="dropdown-link" data-value="' +
+            i +
+            '">' +
+            response.safety.safetyInfo[i].category
+        );
+        newDiv.addClass("dropdown-item");
+        $("#dropdown1").append(newDiv);
+      }
+
+      $("#alertDiv").append(simpleAdvice);
+      $("#alertDiv").append(advisoryDescription);
+      $("#alertDiv").append("<br>");
+    }
+
+    $(document).on("click", ".dropdown-link", function() {
+      $("#safetyDisplay").empty();
+      var safetyIndex = $(this).attr("data-value");
+      console.log(safetyIndex);
+      let newDiv = $("<p>");
+      newDiv.text(response.safety.safetyInfo[safetyIndex].category + ":");
+      newDiv.append("<br>");
+      newDiv.append(
+        "<p class ='safetyDescription'>" + response.safety.safetyInfo[safetyIndex].description +"</p>"
+      );
+      $("#safetyDisplay").append(newDiv);
     });
-  }
+  });
 }
 // Show result cards
 function showCards() {
@@ -187,3 +205,16 @@ function initMap() {
     map: map
   });
 }
+
+//drop down menu
+
+$(".dropdown-button").dropdown({
+  inDuration: 300,
+  outDuration: 225,
+  constrainWidth: true, // Do es not change width of dropdown to that of the activator
+  hover: true, // Activate on hover
+  gutter: 0, // Spacing from edge
+  belowOrigin: false, // Displays dropdown below the button
+  alignment: "left", // Displays dropdown with edge aligned to the left of button
+  stopPropagation: false // Stops event propagation
+});
