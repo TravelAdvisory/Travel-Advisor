@@ -10,7 +10,7 @@ let $button = $("#btn");
 let $search = $("#location_input");
 
 // Hide result divs on pageload, animate header and search button, run search function
-$(document).ready(function () {
+$(document).ready(function() {
   $header.hide().fadeIn(2000);
   $inputCard
     .hide()
@@ -22,7 +22,7 @@ $(document).ready(function () {
 
 // Search function on enter press
 function input() {
-  $search.on("keypress", function (event) {
+  $search.on("keypress", function(event) {
     // If no value entered
     if (event.which === 13 && $search.val() === "") {
       event.preventDefault();
@@ -31,14 +31,13 @@ function input() {
 
       // If value entered, remove search row from page, display new divs with ajax results
     } else if (event.which === 13) {
-      $search.off("keypress");  
+      $search.off("keypress");
       event.preventDefault();
       reset();
       $search.css("border-bottom", "2px solid rgb(9, 142, 14)");
       let input = $(this).val();
       $inputCard.delay(500).slideUp(1000);
       setTimeout(showCards, 1500);
-
       //   Embed google map
       let mapUrl =
         "https://www.google.com/maps/embed/v1/search?key=AIzaSyCv-DHBFYZNL-eaSZDKZRzE_BE5LpMcUe4&q=" +
@@ -48,103 +47,99 @@ function input() {
       //call the google ajax function, which in turn calls wJax()
       gJax(input);
 
-      // NYT Article Search
-      let articleUrl = "https://newsapi.org/v2/everything?q=" 
-      + input + "&sortBy=popularity&apiKey=ef784bd059054855ac2bcbb58bf7335e"
+      // News API Article Search
+      let articleUrl =
+        "https://newsapi.org/v2/everything?q=" + '+' +
+        input +
+        "&sortBy=popularity&from=2018-01-01&apiKey=ef784bd059054855ac2bcbb58bf7335e";
       $.ajax({
         url: articleUrl,
-        method: "GET",
+        method: "GET"
       })
-      .then(function(response) {
-        console.log(response);
-        let results = response.articles;
-        for (let i = 0; i < 10; i++) {
-          let items = $("<li>");
-          let links = $("<a>");
-          items.append(links);
-          links.html(
-            "<h2>" +
-              results[i].title +
-              "</h2>" + results[i].description
+        .then(function(response) {
+          console.log(response);
+          let results = response.articles;
+          for (let i = 0; i < 10; i++) {
+            let items = $("<li>");
+            let links = $("<a>");
+            items.append(links);
+            links.html(
+              "<h2>" + results[i].title + "</h2>" + results[i].description
             );
-          links.attr("href", results[i].url);
-          links.attr('target', '_blank');
-          $("ul").append(items);
+            links.attr("href", results[i].url);
+            links.attr("target", "_blank");
+            $("ul").append(items);
+          }
+        })
+        .fail(function(err) {
+          throw err;
+        });
+    }
+  });
+
+  //ajax call the google map api to get a country code which is used in wJax()
+  function gJax(globalInput) {
+    $.ajax({
+      url:
+        "https://maps.googleapis.com/maps/api/geocode/json?address=" +
+        globalInput +
+        "&key=AIzaSyDDb1773cMxYPHcZaqKujBLjPEGhRFL0lE",
+      method: "GET"
+    }).then(function(response) {
+      console.log(response);
+      var res = response.results;
+      console.log(response);
+      $("#alertDiv").text(res[0].formatted_address);
+      for (var i = 0; i < res[0].address_components.length; i++) {
+        if (res[0].address_components[i].types[0] == "country") {
+          var googleOutput = res[0].address_components[i].short_name;
         }
-      })
-      .fail(function(err) {
-        throw err;
-      });
-    }
-  });
-}
-
-
-//ajax call the google map api to get a country code which is used in wJax()
-function gJax(globalInput) {
-  $.ajax({
-    url:
-      "https://maps.googleapis.com/maps/api/geocode/json?address=" +
-      globalInput + "&key=AIzaSyDDb1773cMxYPHcZaqKujBLjPEGhRFL0lE",
-    method: "GET"
-  }).then(function(response) {
-    console.log(response);
-    var res = response.results;
-    console.log(response);
-    $("#alertDiv").text(res[0].formatted_address);
-    for (var i = 0; i < res[0].address_components.length; i++) {
-      if (res[0].address_components[i].types[0] == "country") {
-        var googleOutput = res[0].address_components[i].short_name;
       }
-    }
-    longitude = parseFloat(res[0].geometry.location.lng);
-    lattitude =  parseFloat(res[0].geometry.location.lat);
-    wJax(googleOutput);
-    initMap();
-  });
-}
+      longitude = parseFloat(res[0].geometry.location.lng);
+      lattitude = parseFloat(res[0].geometry.location.lat);
+      wJax(googleOutput);
+      initMap();
+    });
+  }
 
-//pull and display travel warning based on the country code gJax() provides, and the cordinates used in initMap
-function wJax(googleOutput) {
-  $.ajax({
-    url: "https://api.tugo.com/v1/travelsafe/countries/" + googleOutput,
-    headers: {
-      "X-Auth-API-Key": "kew824h7b2xpjnw9aadbrq6k"
-    },
-    method: "GET"
-  }).then(function(response) {
-    console.log(response);
-    displayWarning();
+  //pull and display travel warning based on the country code gJax() provides, and the cordinates used in initMap
+  function wJax(googleOutput) {
+    $.ajax({
+      url: "https://api.tugo.com/v1/travelsafe/countries/" + googleOutput,
+      headers: {
+        "X-Auth-API-Key": "kew824h7b2xpjnw9aadbrq6k"
+      },
+      method: "GET"
+    }).then(function(response) {
+      console.log(response);
+      displayWarning();
 
-    function displayWarning() {
-      let advisoryDescription = $("<p>");
-      let simpleAdvice = $("<p>");
-      // let dangerIcon = $("<img/>");
-      // dangerIcon.addClass('imgBox');
-      advisoryDescription.text(response.advisories.description);
-      //display according text based on advisoryState level
-      if (response.advisoryState == 0) {
-        simpleAdvice.text("Advice: Proceed with normal precautions");
-        // dangerIcon.attr("src","assets/images/level0.png");
-      } else if (response.advisoryState == 1) {
-        simpleAdvice.text("Advice: Excercise increased caution");
-        // dangerIcon.attr("src","assets/images/level1.png");
-      } else if (response.advisoryState == 2) {
-        simpleAdvice.text("Advice: Reconsider destination");
-        // dangerIcon.attr("src","assets/images/level2.png");
-      } else 
-      {
-        simpleAdvice.text("Advice: Do not travel");
-        //dangerIcon.attr("src","assets/images/level3.png");
+      function displayWarning() {
+        let advisoryDescription = $("<p>");
+        let simpleAdvice = $("<p>");
+        // let dangerIcon = $("<img/>");
+        // dangerIcon.addClass('imgBox');
+        advisoryDescription.text(response.advisories.description);
+        //display according text based on advisoryState level
+        if (response.advisoryState == 0) {
+          simpleAdvice.text("Advice: Proceed with normal precautions");
+          // dangerIcon.attr("src","assets/images/level0.png");
+        } else if (response.advisoryState == 1) {
+          simpleAdvice.text("Advice: Excercise increased caution");
+          // dangerIcon.attr("src","assets/images/level1.png");
+        } else if (response.advisoryState == 2) {
+          simpleAdvice.text("Advice: Reconsider destination");
+          // dangerIcon.attr("src","assets/images/level2.png");
+        } else {
+          simpleAdvice.text("Advice: Do not travel");
+          //dangerIcon.attr("src","assets/images/level3.png");
+        }
+        $("#alertCard").append(simpleAdvice);
+        $("#alertCard").append(advisoryDescription);
       }
-      $("#alertCard").append(simpleAdvice);
-      $("#alertCard").append(advisoryDescription);
-
-    }
-
-  });
+    });
+  }
 }
-
 // Show result cards
 function showCards() {
   $button.show();
@@ -176,14 +171,14 @@ function reset() {
     $button.hide();
     $("select").material_select();
     $("#alertDiv").empty();
-    $('.imgBox').remove();
+    $(".imgBox").remove();
     input();
   });
 }
 
 function initMap() {
-  var cordinates = {lat: lattitude, lng: longitude};
-  var map = new google.maps.Map(document.getElementById('map'), {
+  var cordinates = { lat: lattitude, lng: longitude };
+  var map = new google.maps.Map(document.getElementById("map"), {
     zoom: 4,
     center: cordinates
   });
