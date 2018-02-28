@@ -38,7 +38,6 @@ function input() {
       let input = $(this).val();
       $inputCard.delay(500).slideUp(1000);
       setTimeout(showCards, 1500);
-
       //   Embed google map
       let mapUrl =
         "https://www.google.com/maps/embed/v1/search?key=AIzaSyCv-DHBFYZNL-eaSZDKZRzE_BE5LpMcUe4&q=" +
@@ -48,11 +47,11 @@ function input() {
       //call the google ajax function, which in turn calls wJax()
       gJax(input);
 
-      // NYT Article Search
+      // News API Article Search
       let articleUrl =
-        "https://newsapi.org/v2/everything?q=" +
+        "https://newsapi.org/v2/everything?q=" + '+' +
         input +
-        "&sortBy=popularity&apiKey=ef784bd059054855ac2bcbb58bf7335e";
+        "&sortBy=popularity&from=2018-01-01&apiKey=ef784bd059054855ac2bcbb58bf7335e";
       $.ajax({
         url: articleUrl,
         method: "GET"
@@ -77,8 +76,6 @@ function input() {
         });
     }
   });
-}
-
 
 //ajax call the google map api to get a country code which is used in wJax()
 function gJax(globalInput) {
@@ -161,7 +158,6 @@ function wJax(googleOutput) {
     });
   });
 }
-
 // Show result cards
 function showCards() {
   $button.show();
@@ -222,3 +218,4 @@ $(".dropdown-button").dropdown({
   alignment: "left", // Displays dropdown with edge aligned to the left of button
   stopPropagation: false // Stops event propagation
 });
+}
