@@ -5,6 +5,7 @@ let $alertCard = $("#alertCard");
 let $mapCard = $("#mapCard");
 let $newsCard = $("#newsCard");
 let $button = $("#btn");
+let $weatherCard = $("#weatherCard");
 
 // Location Input
 let $search = $("#location_input");
@@ -141,23 +142,46 @@ function wJax(googleOutput) {
 }
 
 function weatherAjax(input) {
-  let weatherUrl = "api.openweathermap.org/data/2.5/forecast?q=" + input + "&APPID=3761b7072db9ad7469e5eedcb1b70b7a";
-  console.log(weatherUrl);
+  
   $.ajax({
-    url: weatherUrl,
+    url: "https://api.openweathermap.org/data/2.5/forecast?q=" + input + "&units=imperial&APPID=3761b7072db9ad7469e5eedcb1b70b7a",
     method: "GET",
+    error: function () {
+      let error = $("<th>").text("Unable to collect weather information on " + input);
+      $("#tableHead").append(error);
+    }
   }).then(function (response) {
-    console.log('text');
-    console.log(response);
+    let result = response.list;
+    console.log(result.length);
+    //loop gets one result from each day given
+    for (var i = 5; i < result.length; i = i + 8) {
+      let $tableHead = $("#tableHead");
+      let $tableRow = $("#tableRow");
+      let $headDiv = $("<th>");
+      let $rowDiv = $("<td>");
+      $tableHead.append($headDiv);
+      $tableRow.append($rowDiv);
+      let dayofWeek = convertTime(result[i].dt);
+      $headDiv.text(dayofWeek);
+      $rowDiv.html("<img src =http://openweathermap.org/img/w/" + result[i].weather[0].icon + ".png> <br>"+ result[i].weather[0].main + "<br>" +parseInt(result[i].main.temp_min) + "&degF - " + parseInt(result[i].main.temp_max) + "&degF");
+    }
   });
 }
 
+//Converts unix time into day of the week nad puts it in the table
+function convertTime(time) {
+  var day = new Date(time * 1000);
+  var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+  var dayOfWeek = days[day.getDay()];
+  return dayOfWeek;
+}
 // Show result cards
 function showCards() {
   $button.show();
   $mapCard.fadeIn(2000);
   $alertCard.fadeIn(2000);
   $newsCard.fadeIn(2000);
+  $weatherCard.fadeIn(2000);
 }
 
 // Reset page on button click
@@ -181,10 +205,14 @@ function reset() {
     $mapCard.hide();
     $newsCard.hide();
     $button.hide();
+    $weatherCard.hide();
     $("select").material_select();
     $("#alertDiv").empty();
     $('.imgBox').remove();
+    $("#tableHead").empty();
+    $("#tableRow").empty();
     input();
+    
   });
 }
 
