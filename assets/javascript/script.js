@@ -79,6 +79,7 @@ function input() {
   });
 }
 
+
 //ajax call the google map api to get a country code which is used in wJax()
 function gJax(globalInput) {
   $.ajax({
