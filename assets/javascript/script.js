@@ -39,38 +39,25 @@ function input() {
       let input = $(this).val();
       $inputCard.delay(500).slideUp(1000);
       setTimeout(showCards, 1500);
-<<<<<<< HEAD
-=======
       //   Embed google map
       let mapUrl =
         "https://www.google.com/maps/embed/v1/search?key=AIzaSyCv-DHBFYZNL-eaSZDKZRzE_BE5LpMcUe4&q=" +
         input;
       $("iframe").attr("src", mapUrl);
->>>>>>> 30099d4a75111944125b25c98d1921f4a2cf55f1
 
       //call the google ajax function, which in turn calls wJax()
       gJax(input);
 
-<<<<<<< HEAD
-      // NYT Article Search
-      let articleUrl = "https://newsapi.org/v2/everything?q="
-        + input + "&sortBy=popularity&apiKey=ef784bd059054855ac2bcbb58bf7335e"
-=======
       // News API Article Search
       let articleUrl =
         "https://newsapi.org/v2/everything?q=" + '+' +
         input +
         "&sortBy=popularity&from=2018-01-01&apiKey=ef784bd059054855ac2bcbb58bf7335e";
->>>>>>> 30099d4a75111944125b25c98d1921f4a2cf55f1
       $.ajax({
         url: articleUrl,
         method: "GET"
       })
-<<<<<<< HEAD
-        .then(function (response) {
-=======
         .then(function(response) {
->>>>>>> 30099d4a75111944125b25c98d1921f4a2cf55f1
           console.log(response);
           let results = response.articles;
           for (let i = 0; i < 10; i++) {
@@ -78,18 +65,6 @@ function input() {
             let links = $("<a>");
             items.append(links);
             links.html(
-<<<<<<< HEAD
-              "<h2>" +
-              results[i].title +
-              "</h2>" + results[i].description
-            );
-            links.attr("href", results[i].url);
-            links.attr('target', '_blank');
-            $("ul").append(items);
-          }
-        })
-        .fail(function (err) {
-=======
               "<h2>" + results[i].title + "</h2>" + results[i].description
             );
             links.attr("href", results[i].url);
@@ -98,7 +73,6 @@ function input() {
           }
         })
         .fail(function(err) {
->>>>>>> 30099d4a75111944125b25c98d1921f4a2cf55f1
           throw err;
         });
     }
@@ -154,10 +128,6 @@ function wJax(googleOutput) {
         simpleAdvice.text("Advice: Excercise increased caution");
       } else if (response.advisoryState == 2) {
         simpleAdvice.text("Advice: Reconsider destination");
-<<<<<<< HEAD
-        // dangerIcon.attr("src","assets/images/level2.png");
-=======
->>>>>>> 30099d4a75111944125b25c98d1921f4a2cf55f1
       } else {
         simpleAdvice.text("Advice: Do not travel");
       }
@@ -192,7 +162,6 @@ function wJax(googleOutput) {
     });
   });
 }
-<<<<<<< HEAD
 
 function weatherAjax(input) {
   
@@ -228,8 +197,6 @@ function convertTime(time) {
   var dayOfWeek = days[day.getDay()];
   return dayOfWeek;
 }
-=======
->>>>>>> 30099d4a75111944125b25c98d1921f4a2cf55f1
 // Show result cards
 function showCards() {
   $button.show();
@@ -263,13 +230,9 @@ function reset() {
     $weatherCard.hide();
     $("select").material_select();
     $("#alertDiv").empty();
-<<<<<<< HEAD
     $('.imgBox').remove();
     $("#tableHead").empty();
     $("#tableRow").empty();
-=======
-    $(".imgBox").remove();
->>>>>>> 30099d4a75111944125b25c98d1921f4a2cf55f1
     input();
     
   });
@@ -277,11 +240,7 @@ function reset() {
 
 function initMap() {
   var cordinates = { lat: lattitude, lng: longitude };
-<<<<<<< HEAD
-  var map = new google.maps.Map(document.getElementById('map'), {
-=======
   var map = new google.maps.Map(document.getElementById("map"), {
->>>>>>> 30099d4a75111944125b25c98d1921f4a2cf55f1
     zoom: 4,
     center: cordinates
   });
