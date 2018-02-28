@@ -31,7 +31,7 @@ function input() {
 
       // If value entered, remove search row from page, display new divs with ajax results
     } else if (event.which === 13) {
-      $search.off("keypress");  
+      $search.off("keypress");
       event.preventDefault();
       reset();
       $search.css("border-bottom", "2px solid rgb(9, 142, 14)");
@@ -39,42 +39,36 @@ function input() {
       $inputCard.delay(500).slideUp(1000);
       setTimeout(showCards, 1500);
 
-      //   Embed google map
-      let mapUrl =
-        "https://www.google.com/maps/embed/v1/search?key=AIzaSyCv-DHBFYZNL-eaSZDKZRzE_BE5LpMcUe4&q=" +
-        input;
-      $("iframe").attr("src", mapUrl);
-
       //call the google ajax function, which in turn calls wJax()
       gJax(input);
 
       // NYT Article Search
-      let articleUrl = "https://newsapi.org/v2/everything?q=" 
-      + input + "&sortBy=popularity&apiKey=ef784bd059054855ac2bcbb58bf7335e"
+      let articleUrl = "https://newsapi.org/v2/everything?q="
+        + input + "&sortBy=popularity&apiKey=ef784bd059054855ac2bcbb58bf7335e"
       $.ajax({
         url: articleUrl,
         method: "GET",
       })
-      .then(function(response) {
-        console.log(response);
-        let results = response.articles;
-        for (let i = 0; i < 10; i++) {
-          let items = $("<li>");
-          let links = $("<a>");
-          items.append(links);
-          links.html(
-            "<h2>" +
+        .then(function (response) {
+          console.log(response);
+          let results = response.articles;
+          for (let i = 0; i < 10; i++) {
+            let items = $("<li>");
+            let links = $("<a>");
+            items.append(links);
+            links.html(
+              "<h2>" +
               results[i].title +
               "</h2>" + results[i].description
             );
-          links.attr("href", results[i].url);
-          links.attr('target', '_blank');
-          $("ul").append(items);
-        }
-      })
-      .fail(function(err) {
-        throw err;
-      });
+            links.attr("href", results[i].url);
+            links.attr('target', '_blank');
+            $("ul").append(items);
+          }
+        })
+        .fail(function (err) {
+          throw err;
+        });
     }
   });
 }
@@ -86,10 +80,9 @@ function gJax(globalInput) {
       "https://maps.googleapis.com/maps/api/geocode/json?address=" +
       globalInput + "&key=AIzaSyDDb1773cMxYPHcZaqKujBLjPEGhRFL0lE",
     method: "GET"
-  }).then(function(response) {
+  }).then(function (response) {
     console.log(response);
     var res = response.results;
-    console.log(response);
     $("#alertDiv").text(res[0].formatted_address);
     for (var i = 0; i < res[0].address_components.length; i++) {
       if (res[0].address_components[i].types[0] == "country") {
@@ -97,9 +90,13 @@ function gJax(globalInput) {
       }
     }
     longitude = parseFloat(res[0].geometry.location.lng);
-    lattitude =  parseFloat(res[0].geometry.location.lat);
+    lattitude = parseFloat(res[0].geometry.location.lat);
     wJax(googleOutput);
     initMap();
+
+    //Calling weather ajax call
+    weatherAjax(res[0].formatted_address);
+
   });
 }
 
@@ -111,7 +108,7 @@ function wJax(googleOutput) {
       "X-Auth-API-Key": "kew824h7b2xpjnw9aadbrq6k"
     },
     method: "GET"
-  }).then(function(response) {
+  }).then(function (response) {
     console.log(response);
     displayWarning();
 
@@ -131,8 +128,7 @@ function wJax(googleOutput) {
       } else if (response.advisoryState == 2) {
         simpleAdvice.text("Advice: Reconsider destination");
         // dangerIcon.attr("src","assets/images/level2.png");
-      } else 
-      {
+      } else {
         simpleAdvice.text("Advice: Do not travel");
         //dangerIcon.attr("src","assets/images/level3.png");
       }
@@ -141,6 +137,18 @@ function wJax(googleOutput) {
 
     }
 
+  });
+}
+
+function weatherAjax(input) {
+  let weatherUrl = "api.openweathermap.org/data/2.5/forecast?q=" + input + "&APPID=3761b7072db9ad7469e5eedcb1b70b7a";
+  console.log(weatherUrl);
+  $.ajax({
+    url: weatherUrl,
+    method: "GET",
+  }).then(function (response) {
+    console.log('text');
+    console.log(response);
   });
 }
 
@@ -154,7 +162,7 @@ function showCards() {
 
 // Reset page on button click
 function reset() {
-  $button.on("click", function(event) {
+  $button.on("click", function (event) {
     //   Prevents dupicate click assignments
     event.preventDefault();
     $button.off("click");
@@ -181,7 +189,7 @@ function reset() {
 }
 
 function initMap() {
-  var cordinates = {lat: lattitude, lng: longitude};
+  var cordinates = { lat: lattitude, lng: longitude };
   var map = new google.maps.Map(document.getElementById('map'), {
     zoom: 4,
     center: cordinates
