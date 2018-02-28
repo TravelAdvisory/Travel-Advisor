@@ -5,6 +5,7 @@ let $alertCard = $("#alertCard");
 let $mapCard = $("#mapCard");
 let $newsCard = $("#newsCard");
 let $button = $("#btn");
+let $weatherCard = $("#weatherCard");
 
 // Location Input
 let $search = $("#location_input");
@@ -85,10 +86,9 @@ function gJax(globalInput) {
       globalInput +
       "&key=AIzaSyDDb1773cMxYPHcZaqKujBLjPEGhRFL0lE",
     method: "GET"
-  }).then(function(response) {
+  }).then(function (response) {
     console.log(response);
     var res = response.results;
-    console.log(response);
     $("#alertDiv").text(res[0].formatted_address);
     for (var i = 0; i < res[0].address_components.length; i++) {
       if (res[0].address_components[i].types[0] == "country") {
@@ -99,6 +99,10 @@ function gJax(globalInput) {
     lattitude = parseFloat(res[0].geometry.location.lat);
     wJax(googleOutput);
     initMap();
+
+    //Calling weather ajax call
+    weatherAjax(res[0].formatted_address);
+
   });
 }
 
@@ -110,7 +114,7 @@ function wJax(googleOutput) {
       "X-Auth-API-Key": "kew824h7b2xpjnw9aadbrq6k"
     },
     method: "GET"
-  }).then(function(response) {
+  }).then(function (response) {
     console.log(response);
     displayWarning();
 
@@ -158,17 +162,53 @@ function wJax(googleOutput) {
     });
   });
 }
+
+function weatherAjax(input) {
+  
+  $.ajax({
+    url: "https://api.openweathermap.org/data/2.5/forecast?q=" + input + "&units=imperial&APPID=3761b7072db9ad7469e5eedcb1b70b7a",
+    method: "GET",
+    error: function () {
+      let error = $("<th>").text("Unable to collect weather information on " + input);
+      $("#tableHead").append(error);
+    }
+  }).then(function (response) {
+    let result = response.list;
+    console.log(result.length);
+    //loop gets one result from each day given
+    for (var i = 5; i < result.length; i = i + 8) {
+      let $tableHead = $("#tableHead");
+      let $tableRow = $("#tableRow");
+      let $headDiv = $("<th>");
+      let $rowDiv = $("<td>");
+      $tableHead.append($headDiv);
+      $tableRow.append($rowDiv);
+      let dayofWeek = convertTime(result[i].dt);
+      $headDiv.text(dayofWeek);
+      $rowDiv.html("<img src =http://openweathermap.org/img/w/" + result[i].weather[0].icon + ".png> <br>"+ result[i].weather[0].main + "<br>" +parseInt(result[i].main.temp_min) + "&degF - " + parseInt(result[i].main.temp_max) + "&degF");
+    }
+  });
+}
+
+//Converts unix time into day of the week nad puts it in the table
+function convertTime(time) {
+  var day = new Date(time * 1000);
+  var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+  var dayOfWeek = days[day.getDay()];
+  return dayOfWeek;
+}
 // Show result cards
 function showCards() {
   $button.show();
   $mapCard.fadeIn(2000);
   $alertCard.fadeIn(2000);
   $newsCard.fadeIn(2000);
+  $weatherCard.fadeIn(2000);
 }
 
 // Reset page on button click
 function reset() {
-  $button.on("click", function(event) {
+  $button.on("click", function (event) {
     //   Prevents dupicate click assignments
     event.preventDefault();
     $button.off("click");
@@ -187,10 +227,14 @@ function reset() {
     $mapCard.hide();
     $newsCard.hide();
     $button.hide();
+    $weatherCard.hide();
     $("select").material_select();
     $("#alertDiv").empty();
-    $(".imgBox").remove();
+    $('.imgBox').remove();
+    $("#tableHead").empty();
+    $("#tableRow").empty();
     input();
+    
   });
 }
 
