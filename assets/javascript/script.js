@@ -11,7 +11,7 @@ let $weatherCard = $("#weatherCard");
 let $search = $("#location_input");
 
 // Hide result divs on pageload, animate header and search button, run search function
-$(document).ready(function () {
+$(document).ready(function() {
   $header.hide().fadeIn(2000);
   $inputCard
     .hide()
@@ -23,7 +23,7 @@ $(document).ready(function () {
 
 // Search function on enter press
 function input() {
-  $search.on("keypress", function (event) {
+  $search.on("keypress", function(event) {
     // If no value entered
     if (event.which === 13 && $search.val() === "") {
       event.preventDefault();
@@ -39,18 +39,38 @@ function input() {
       let input = $(this).val();
       $inputCard.delay(500).slideUp(1000);
       setTimeout(showCards, 1500);
+<<<<<<< HEAD
+=======
+      //   Embed google map
+      let mapUrl =
+        "https://www.google.com/maps/embed/v1/search?key=AIzaSyCv-DHBFYZNL-eaSZDKZRzE_BE5LpMcUe4&q=" +
+        input;
+      $("iframe").attr("src", mapUrl);
+>>>>>>> 30099d4a75111944125b25c98d1921f4a2cf55f1
 
       //call the google ajax function, which in turn calls wJax()
       gJax(input);
 
+<<<<<<< HEAD
       // NYT Article Search
       let articleUrl = "https://newsapi.org/v2/everything?q="
         + input + "&sortBy=popularity&apiKey=ef784bd059054855ac2bcbb58bf7335e"
+=======
+      // News API Article Search
+      let articleUrl =
+        "https://newsapi.org/v2/everything?q=" + '+' +
+        input +
+        "&sortBy=popularity&from=2018-01-01&apiKey=ef784bd059054855ac2bcbb58bf7335e";
+>>>>>>> 30099d4a75111944125b25c98d1921f4a2cf55f1
       $.ajax({
         url: articleUrl,
-        method: "GET",
+        method: "GET"
       })
+<<<<<<< HEAD
         .then(function (response) {
+=======
+        .then(function(response) {
+>>>>>>> 30099d4a75111944125b25c98d1921f4a2cf55f1
           console.log(response);
           let results = response.articles;
           for (let i = 0; i < 10; i++) {
@@ -58,6 +78,7 @@ function input() {
             let links = $("<a>");
             items.append(links);
             links.html(
+<<<<<<< HEAD
               "<h2>" +
               results[i].title +
               "</h2>" + results[i].description
@@ -68,18 +89,28 @@ function input() {
           }
         })
         .fail(function (err) {
+=======
+              "<h2>" + results[i].title + "</h2>" + results[i].description
+            );
+            links.attr("href", results[i].url);
+            links.attr("target", "_blank");
+            $(".ulText").append(items);
+          }
+        })
+        .fail(function(err) {
+>>>>>>> 30099d4a75111944125b25c98d1921f4a2cf55f1
           throw err;
         });
     }
   });
-}
 
 //ajax call the google map api to get a country code which is used in wJax()
 function gJax(globalInput) {
   $.ajax({
     url:
       "https://maps.googleapis.com/maps/api/geocode/json?address=" +
-      globalInput + "&key=AIzaSyDDb1773cMxYPHcZaqKujBLjPEGhRFL0lE",
+      globalInput +
+      "&key=AIzaSyDDb1773cMxYPHcZaqKujBLjPEGhRFL0lE",
     method: "GET"
   }).then(function (response) {
     console.log(response);
@@ -116,30 +147,52 @@ function wJax(googleOutput) {
     function displayWarning() {
       let advisoryDescription = $("<p>");
       let simpleAdvice = $("<p>");
-      // let dangerIcon = $("<img/>");
-      // dangerIcon.addClass('imgBox');
       advisoryDescription.text(response.advisories.description);
-      //display according text based on advisoryState level
       if (response.advisoryState == 0) {
-        simpleAdvice.text("Advice: Proceed with normal precautions");
-        // dangerIcon.attr("src","assets/images/level0.png");
+        simpleAdvice.text("Advice: Proceed as normal");
       } else if (response.advisoryState == 1) {
         simpleAdvice.text("Advice: Excercise increased caution");
-        // dangerIcon.attr("src","assets/images/level1.png");
       } else if (response.advisoryState == 2) {
         simpleAdvice.text("Advice: Reconsider destination");
+<<<<<<< HEAD
         // dangerIcon.attr("src","assets/images/level2.png");
+=======
+>>>>>>> 30099d4a75111944125b25c98d1921f4a2cf55f1
       } else {
         simpleAdvice.text("Advice: Do not travel");
-        //dangerIcon.attr("src","assets/images/level3.png");
       }
-      $("#alertCard").append(simpleAdvice);
-      $("#alertCard").append(advisoryDescription);
+      for (var i = 0; i < response.safety.safetyInfo.length; i++) {
+        let newDiv = $("<li>");
+        newDiv.append(
+          '<a href="#!" class="dropdown-link" data-value="' +
+            i +
+            '">' +
+            response.safety.safetyInfo[i].category
+        );
+        newDiv.addClass("dropdown-item");
+        $("#dropdown1").append(newDiv);
+      }
 
+      $("#alertDiv").append(simpleAdvice);
+      $("#alertDiv").append(advisoryDescription);
+      $("#alertDiv").append("<br>");
     }
 
+    $(document).on("click", ".dropdown-link", function() {
+      $("#safetyDisplay").empty();
+      var safetyIndex = $(this).attr("data-value");
+      console.log(safetyIndex);
+      let newDiv = $("<p>");
+      newDiv.text(response.safety.safetyInfo[safetyIndex].category + ":");
+      newDiv.append("<br>");
+      newDiv.append(
+        "<p class ='safetyDescription'>" + response.safety.safetyInfo[safetyIndex].description +"</p>"
+      );
+      $("#safetyDisplay").append(newDiv);
+    });
   });
 }
+<<<<<<< HEAD
 
 function weatherAjax(input) {
   
@@ -175,6 +228,8 @@ function convertTime(time) {
   var dayOfWeek = days[day.getDay()];
   return dayOfWeek;
 }
+=======
+>>>>>>> 30099d4a75111944125b25c98d1921f4a2cf55f1
 // Show result cards
 function showCards() {
   $button.show();
@@ -208,9 +263,13 @@ function reset() {
     $weatherCard.hide();
     $("select").material_select();
     $("#alertDiv").empty();
+<<<<<<< HEAD
     $('.imgBox').remove();
     $("#tableHead").empty();
     $("#tableRow").empty();
+=======
+    $(".imgBox").remove();
+>>>>>>> 30099d4a75111944125b25c98d1921f4a2cf55f1
     input();
     
   });
@@ -218,7 +277,11 @@ function reset() {
 
 function initMap() {
   var cordinates = { lat: lattitude, lng: longitude };
+<<<<<<< HEAD
   var map = new google.maps.Map(document.getElementById('map'), {
+=======
+  var map = new google.maps.Map(document.getElementById("map"), {
+>>>>>>> 30099d4a75111944125b25c98d1921f4a2cf55f1
     zoom: 4,
     center: cordinates
   });
@@ -226,4 +289,18 @@ function initMap() {
     position: cordinates,
     map: map
   });
+}
+
+//drop down menu
+
+$(".dropdown-button").dropdown({
+  inDuration: 300,
+  outDuration: 225,
+  constrainWidth: true, // Do es not change width of dropdown to that of the activator
+  hover: true, // Activate on hover
+  gutter: 0, // Spacing from edge
+  belowOrigin: false, // Displays dropdown below the button
+  alignment: "left", // Displays dropdown with edge aligned to the left of button
+  stopPropagation: false // Stops event propagation
+});
 }

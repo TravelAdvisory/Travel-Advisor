@@ -182,3 +182,12 @@ body {
   }
   
   
+.dropdown-item {
+  border:none;
+  margin:0px;
+
+}
+
+.safetyDescription{
+  text-align:left;
+}
