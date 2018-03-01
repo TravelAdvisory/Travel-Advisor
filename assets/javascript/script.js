@@ -5,12 +5,13 @@ let $alertCard = $("#alertCard");
 let $mapCard = $("#mapCard");
 let $newsCard = $("#newsCard");
 let $button = $("#btn");
+let $weatherCard = $("#weatherCard");
 
 // Location Input
 let $search = $("#location_input");
 
 // Hide result divs on pageload, animate header and search button, run search function
-$(document).ready(function () {
+$(document).ready(function() {
   $header.hide().fadeIn(2000);
   $inputCard
     .hide()
@@ -22,7 +23,7 @@ $(document).ready(function () {
 
 // Search function on enter press
 function input() {
-  $search.on("keypress", function (event) {
+  $search.on("keypress", function(event) {
     // If no value entered
     if (event.which === 13 && $search.val() === "") {
       event.preventDefault();
@@ -31,14 +32,13 @@ function input() {
 
       // If value entered, remove search row from page, display new divs with ajax results
     } else if (event.which === 13) {
-      $search.off("keypress");  
+      $search.off("keypress");
       event.preventDefault();
       reset();
       $search.css("border-bottom", "2px solid rgb(9, 142, 14)");
       let input = $(this).val();
       $inputCard.delay(500).slideUp(1000);
       setTimeout(showCards, 1500);
-
       //   Embed google map
       let mapUrl =
         "https://www.google.com/maps/embed/v1/search?key=AIzaSyCv-DHBFYZNL-eaSZDKZRzE_BE5LpMcUe4&q=" +
@@ -48,48 +48,47 @@ function input() {
       //call the google ajax function, which in turn calls wJax()
       gJax(input);
 
-      // NYT Article Search
-      let articleUrl = "https://newsapi.org/v2/everything?q=" 
-      + input + "&sortBy=popularity&apiKey=ef784bd059054855ac2bcbb58bf7335e"
+      // News API Article Search
+      let articleUrl =
+        "https://newsapi.org/v2/everything?q=" + '+' +
+        input +
+        "&sortBy=popularity&from=2018-01-01&apiKey=ef784bd059054855ac2bcbb58bf7335e";
       $.ajax({
         url: articleUrl,
-        method: "GET",
+        method: "GET"
       })
-      .then(function(response) {
-        console.log(response);
-        let results = response.articles;
-        for (let i = 0; i < 10; i++) {
-          let items = $("<li>");
-          let links = $("<a>");
-          items.append(links);
-          links.html(
-            "<h2>" +
-              results[i].title +
-              "</h2>" + results[i].description
+        .then(function(response) {
+          console.log(response);
+          let results = response.articles;
+          for (let i = 0; i < 10; i++) {
+            let items = $("<li>");
+            let links = $("<a>");
+            items.append(links);
+            links.html(
+              "<h2>" + results[i].title + "</h2>" + results[i].description
             );
-          links.attr("href", results[i].url);
-          links.attr('target', '_blank');
-          $("ul").append(items);
-        }
-      })
-      .fail(function(err) {
-        throw err;
-      });
+            links.attr("href", results[i].url);
+            links.attr("target", "_blank");
+            $(".ulText").append(items);
+          }
+        })
+        .fail(function(err) {
+          throw err;
+        });
     }
   });
-}
 
 //ajax call the google map api to get a country code which is used in wJax()
 function gJax(globalInput) {
   $.ajax({
     url:
       "https://maps.googleapis.com/maps/api/geocode/json?address=" +
-      globalInput + "&key=AIzaSyDDb1773cMxYPHcZaqKujBLjPEGhRFL0lE",
+      globalInput +
+      "&key=AIzaSyDDb1773cMxYPHcZaqKujBLjPEGhRFL0lE",
     method: "GET"
-  }).then(function(response) {
+  }).then(function (response) {
     console.log(response);
     var res = response.results;
-    console.log(response);
     $("#alertDiv").text(res[0].formatted_address);
     for (var i = 0; i < res[0].address_components.length; i++) {
       if (res[0].address_components[i].types[0] == "country") {
@@ -97,9 +96,13 @@ function gJax(globalInput) {
       }
     }
     longitude = parseFloat(res[0].geometry.location.lng);
-    lattitude =  parseFloat(res[0].geometry.location.lat);
+    lattitude = parseFloat(res[0].geometry.location.lat);
     wJax(googleOutput);
     initMap();
+
+    //Calling weather ajax call
+    weatherAjax(res[0].formatted_address);
+
   });
 }
 
@@ -111,50 +114,104 @@ function wJax(googleOutput) {
       "X-Auth-API-Key": "kew824h7b2xpjnw9aadbrq6k"
     },
     method: "GET"
-  }).then(function(response) {
+  }).then(function (response) {
     console.log(response);
     displayWarning();
 
     function displayWarning() {
       let advisoryDescription = $("<p>");
       let simpleAdvice = $("<p>");
-      // let dangerIcon = $("<img/>");
-      // dangerIcon.addClass('imgBox');
       advisoryDescription.text(response.advisories.description);
-      //display according text based on advisoryState level
       if (response.advisoryState == 0) {
-        simpleAdvice.text("Advice: Proceed with normal precautions");
-        // dangerIcon.attr("src","assets/images/level0.png");
+        simpleAdvice.text("Advice: Proceed as normal");
       } else if (response.advisoryState == 1) {
         simpleAdvice.text("Advice: Excercise increased caution");
-        // dangerIcon.attr("src","assets/images/level1.png");
       } else if (response.advisoryState == 2) {
         simpleAdvice.text("Advice: Reconsider destination");
-        // dangerIcon.attr("src","assets/images/level2.png");
-      } else 
-      {
+      } else {
         simpleAdvice.text("Advice: Do not travel");
-        //dangerIcon.attr("src","assets/images/level3.png");
       }
-      $("#alertCard").append(simpleAdvice);
-      $("#alertCard").append(advisoryDescription);
+      if (response.safety.safetyInfo.length<1){
+        $("#dropdown-wrapper").remove();
+      }
+      for (var i = 0; i < response.safety.safetyInfo.length; i++) {
+        let newDiv = $("<li>");
+        newDiv.append(
+          '<a href="#!" class="dropdown-link" data-value="' +
+            i +
+            '">' +
+            response.safety.safetyInfo[i].category
+        );
+        newDiv.addClass("dropdown-item");
+        $("#dropdown1").append(newDiv);
+      }
 
+      $("#alertDiv").append(simpleAdvice);
+      $("#alertDiv").append(advisoryDescription);
+      $("#alertDiv").append("<br>");
     }
 
+    $(document).on("click", ".dropdown-link", function() {
+      $("#safetyDisplay").empty();
+      var safetyIndex = $(this).attr("data-value");
+      console.log(safetyIndex);
+      let newDiv = $("<p>");
+      newDiv.text(response.safety.safetyInfo[safetyIndex].category + ":");
+      newDiv.append("<br>");
+      newDiv.append(
+        "<p class ='safetyDescription'>" + response.safety.safetyInfo[safetyIndex].description +"</p>"
+      );
+      $("#safetyDisplay").append(newDiv);
+    });
   });
 }
 
+function weatherAjax(input) {
+  
+  $.ajax({
+    url: "https://api.openweathermap.org/data/2.5/forecast?q=" + input + "&units=imperial&APPID=3761b7072db9ad7469e5eedcb1b70b7a",
+    method: "GET",
+    error: function () {
+      let error = $("<th>").text("Unable to collect weather information on " + input);
+      $("#tableHead").append(error);
+    }
+  }).then(function (response) {
+    let result = response.list;
+    console.log(result.length);
+    //loop gets one result from each day given
+    for (var i = 5; i < result.length; i = i + 8) {
+      let $tableHead = $("#tableHead");
+      let $tableRow = $("#tableRow");
+      let $headDiv = $("<th>");
+      let $rowDiv = $("<td>");
+      $tableHead.append($headDiv);
+      $tableRow.append($rowDiv);
+      let dayofWeek = convertTime(result[i].dt);
+      $headDiv.text(dayofWeek);
+      $rowDiv.html("<img src =http://openweathermap.org/img/w/" + result[i].weather[0].icon + ".png> <br>"+ result[i].weather[0].main + "<br>" +parseInt(result[i].main.temp_min) + "&degF - " + parseInt(result[i].main.temp_max) + "&degF");
+    }
+  });
+}
+
+//Converts unix time into day of the week nad puts it in the table
+function convertTime(time) {
+  var day = new Date(time * 1000);
+  var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+  var dayOfWeek = days[day.getDay()];
+  return dayOfWeek;
+}
 // Show result cards
 function showCards() {
   $button.show();
   $mapCard.fadeIn(2000);
   $alertCard.fadeIn(2000);
   $newsCard.fadeIn(2000);
+  $weatherCard.fadeIn(2000);
 }
 
 // Reset page on button click
 function reset() {
-  $button.on("click", function(event) {
+  $button.on("click", function (event) {
     //   Prevents dupicate click assignments
     event.preventDefault();
     $button.off("click");
@@ -173,16 +230,33 @@ function reset() {
     $mapCard.hide();
     $newsCard.hide();
     $button.hide();
+    $weatherCard.hide();
     $("select").material_select();
     $("#alertDiv").empty();
     $('.imgBox').remove();
+    $("#tableHead").empty();
+    $("#tableRow").empty();
+    $("#dropdown1").empty();
+    $("#safetyDisplay").empty();
     input();
+    
   });
+  $(".dropdown-button").dropdown({
+    inDuration: 300,
+    outDuration: 225,
+    constrainWidth: true, // Do es not change width of dropdown to that of the activator
+    hover: true, // Activate on hover
+    gutter: 0, // Spacing from edge
+    belowOrigin: false, // Displays dropdown below the button
+    alignment: "left", // Displays dropdown with edge aligned to the left of button
+    stopPropagation: false // Stops event propagation
+  });
+
 }
 
 function initMap() {
-  var cordinates = {lat: lattitude, lng: longitude};
-  var map = new google.maps.Map(document.getElementById('map'), {
+  var cordinates = { lat: lattitude, lng: longitude };
+  var map = new google.maps.Map(document.getElementById("map"), {
     zoom: 4,
     center: cordinates
   });
@@ -190,4 +264,18 @@ function initMap() {
     position: cordinates,
     map: map
   });
+}
+
+//drop down menu
+
+$(".dropdown-button").dropdown({
+  inDuration: 300,
+  outDuration: 225,
+  constrainWidth: true, // Do es not change width of dropdown to that of the activator
+  hover: true, // Activate on hover
+  gutter: 0, // Spacing from edge
+  belowOrigin: false, // Displays dropdown below the button
+  alignment: "left", // Displays dropdown with edge aligned to the left of button
+  stopPropagation: false // Stops event propagation
+});
 }

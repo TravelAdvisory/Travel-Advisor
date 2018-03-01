@@ -12,6 +12,10 @@ body {
     flex: 1 0 auto;
   }
   
+  td,th {
+    text-align: center;
+  }
+
   .container {
     width: 100%;
     max-width: initial;
@@ -46,7 +50,8 @@ body {
   #alertDiv,
   .copyright, 
   a.footlink, 
-  a.footlink:hover 
+  a.footlink:hover,
+  td, th
    {
     color: rgb(237, 247, 220);
   }
@@ -80,7 +85,8 @@ body {
   #inputCard,
   #alertCard,
   #mapCard, 
-  #newsCard {
+  #newsCard,
+  #weatherCard {
     position: relative;
     padding: 20px;
     text-align: center;
@@ -114,13 +120,15 @@ body {
   
   #alertCard,
   #mapCard, 
-  #newsCard {
+  #newsCard,
+  #weatherCard {
     background-color: rgba(58, 108, 112, 0.8);
     height: 100%;
   }
   
   #alertCard,
-  #mapCard {
+  #mapCard,
+  #weatherCard {
     min-height: 100%;
   }
   
@@ -174,3 +182,16 @@ body {
   }
   
   
+.dropdown-item {
+  border:none;
+  margin:0px;
+
+}
+
+.safetyDescription{
+  text-align:left;
+}
+
+#dropdown1 {
+  overflow: scroll !important;
+}
