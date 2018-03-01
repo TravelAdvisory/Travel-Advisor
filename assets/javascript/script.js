@@ -287,4 +287,4 @@ function input() {
       $("#safetyDisplay").empty();
       input();
     });
-
+  }
