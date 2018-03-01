@@ -33,3 +33,5 @@ https://developers.google.com/maps/documentation/geocoding/start
 Tugo Travel API
 http://developer.tugo.com/docs/read/Home
 
+Weather API
+https://openweathermap.org/api

@@ -12,9 +12,8 @@ let $search = $("#location_input");
 
 // Hide result divs on pageload, animate header and search button, run search function
 $(document).ready(function() {
-  $header.hide().fadeIn(2000);
+  $header.fadeIn(2000);
   $inputCard
-    .hide()
     .delay(1000)
     .fadeIn(2000);
   $("select").material_select();
@@ -39,18 +38,13 @@ function input() {
       let input = $(this).val();
       $inputCard.delay(500).slideUp(1000);
       setTimeout(showCards, 1500);
-      //   Embed google map
-      let mapUrl =
-        "https://www.google.com/maps/embed/v1/search?key=AIzaSyCv-DHBFYZNL-eaSZDKZRzE_BE5LpMcUe4&q=" +
-        input;
-      $("iframe").attr("src", mapUrl);
 
       //call the google ajax function, which in turn calls wJax()
       gJax(input);
 
       // News API Article Search
       let articleUrl =
-        "https://newsapi.org/v2/everything?q=" + '+' +
+        "https://newsapi.org/v2/everything?q=+" +
         input +
         "&sortBy=popularity&from=2018-01-01&apiKey=ef784bd059054855ac2bcbb58bf7335e";
       $.ajax({
@@ -163,13 +157,13 @@ function wJax(googleOutput) {
   });
 }
 
-function weatherAjax(input) {
+function weatherAjax(address) {
   
   $.ajax({
-    url: "https://api.openweathermap.org/data/2.5/forecast?q=" + input + "&units=imperial&APPID=3761b7072db9ad7469e5eedcb1b70b7a",
+    url: "https://api.openweathermap.org/data/2.5/forecast?q=" + address + "&units=imperial&APPID=3761b7072db9ad7469e5eedcb1b70b7a",
     method: "GET",
     error: function () {
-      let error = $("<th>").text("Unable to collect weather information on " + input);
+      let error = $("<th>").text("Unable to collect weather information on " + address);
       $("#tableHead").append(error);
     }
   }).then(function (response) {
@@ -177,15 +171,15 @@ function weatherAjax(input) {
     console.log(result.length);
     //loop gets one result from each day given
     for (var i = 5; i < result.length; i = i + 8) {
-      let $tableHead = $("#tableHead");
-      let $tableRow = $("#tableRow");
       let $headDiv = $("<th>");
       let $rowDiv = $("<td>");
-      $tableHead.append($headDiv);
-      $tableRow.append($rowDiv);
+      $("#tableHead").append($headDiv);
+      $("#tableRow").append($rowDiv);
       let dayofWeek = convertTime(result[i].dt);
       $headDiv.text(dayofWeek);
-      $rowDiv.html("<img src =http://openweathermap.org/img/w/" + result[i].weather[0].icon + ".png> <br>"+ result[i].weather[0].main + "<br>" +parseInt(result[i].main.temp_min) + "&degF - " + parseInt(result[i].main.temp_max) + "&degF");
+      $rowDiv.html("<img src =http://openweathermap.org/img/w/" + result[i].weather[0].icon + ".png> <br>"+ 
+      result[i].weather[0].main + "<br>" +
+      parseInt(result[i].main.temp_min) + "&degF - " + parseInt(result[i].main.temp_max) + "&degF");
     }
   });
 }
