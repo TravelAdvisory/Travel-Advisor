@@ -52,7 +52,6 @@ function input() {
         method: "GET"
       })
         .then(function(response) {
-          console.log(response);
           let results = response.articles;
           for (let i = 0; i < 10; i++) {
             let items = $("<li>");
@@ -100,6 +99,32 @@ function input() {
     });
   }
 
+  function initMap() {
+    var cordinates = { lat: lattitude, lng: longitude };
+    var map = new google.maps.Map(document.getElementById("map"), {
+      zoom: 4,
+      center: cordinates
+    });
+    var marker = new google.maps.Marker({
+      position: cordinates,
+      map: map
+    });
+  }
+
+  //drop down menu
+
+  $(".dropdown-button").dropdown({
+    inDuration: 300,
+    outDuration: 225,
+    constrainWidth: true, // Do es not change width of dropdown to that of the activator
+    hover: true, // Activate on hover
+    gutter: 0, // Spacing from edge
+    belowOrigin: false, // Displays dropdown below the button
+    alignment: "left", // Displays dropdown with edge aligned to the left of button
+    stopPropagation: false // Stops event propagation
+  });
+}
+
   //pull and display travel warning based on the country code googleCall() provides, and the cordinates used in initMap
   function warningCall(googleOutput) {
     $("#dropdown-wrapper").show();
@@ -111,7 +136,6 @@ function input() {
         },
         method: "GET"
       }).then(function(response) {
-        console.log(response);
         displayWarning();
 
         function displayWarning() {
@@ -150,7 +174,6 @@ function input() {
         $(document).on("click", ".dropdown-link", function() {
           $("#safetyDisplay").empty();
           var safetyIndex = $(this).attr("data-value");
-          console.log(safetyIndex);
           let newDiv = $("<p>");
           newDiv.text(response.safety.safetyInfo[safetyIndex].category + ":");
           newDiv.append("<br>");
@@ -186,7 +209,6 @@ function input() {
       }
     }).then(function(response) {
       let result = response.list;
-      console.log(result.length);
       //loop gets one result from each day given
       for (var i = 5; i < result.length; i = i + 8) {
         let $headDiv = $("<th>");
@@ -265,40 +287,4 @@ function input() {
       $("#safetyDisplay").empty();
       input();
     });
-    $(".dropdown-button").dropdown({
-      inDuration: 300,
-      outDuration: 225,
-      constrainWidth: true, // Do es not change width of dropdown to that of the activator
-      hover: true, // Activate on hover
-      gutter: 0, // Spacing from edge
-      belowOrigin: false, // Displays dropdown below the button
-      alignment: "left", // Displays dropdown with edge aligned to the left of button
-      stopPropagation: false // Stops event propagation
-    });
-  }
 
-  function initMap() {
-    var cordinates = { lat: lattitude, lng: longitude };
-    var map = new google.maps.Map(document.getElementById("map"), {
-      zoom: 4,
-      center: cordinates
-    });
-    var marker = new google.maps.Marker({
-      position: cordinates,
-      map: map
-    });
-  }
-
-  //drop down menu
-
-  $(".dropdown-button").dropdown({
-    inDuration: 300,
-    outDuration: 225,
-    constrainWidth: true, // Do es not change width of dropdown to that of the activator
-    hover: true, // Activate on hover
-    gutter: 0, // Spacing from edge
-    belowOrigin: false, // Displays dropdown below the button
-    alignment: "left", // Displays dropdown with edge aligned to the left of button
-    stopPropagation: false // Stops event propagation
-  });
-}
