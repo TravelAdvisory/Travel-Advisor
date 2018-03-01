@@ -57,6 +57,15 @@
                         <span class="card-title mainText alerts"> Travel Information </span>
                         <p id="alertDiv">
                         </p>
+                        <div id="dropdown-wrapper">
+                            <!-- Dropdown Trigger -->
+                            <a class='dropdown-button btn' href='#' data-activates='dropdown1'>Safety Checklist</a>
+                            <!-- Dropdown Structure -->
+                            <ul id='dropdown1' class='dropdown-content'>
+                            </ul>
+                        </div>
+                        <div id="safetyDisplay">
+                        </div>
                     </div>
                 </div>
 
@@ -64,6 +73,21 @@
 
                 <div class="card hidden" id="mapCard">
                     <div id="map" class="card-content white-text">
+                    </div>
+                </div>
+
+                <!-- Weather -->
+                
+                <div class="card hidden" id="weatherCard">
+                    <div id="weather" class="card-content">
+                        <table class = "centered responsive-table" style="display: inline-table">
+                            <thead>
+                                <tr id="tableHead"></tr>
+                            </thead>
+                            <tbody>
+                                <tr id="tableRow"></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
