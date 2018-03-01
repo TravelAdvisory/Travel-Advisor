@@ -39,8 +39,8 @@ function input() {
       $inputCard.delay(500).slideUp(1000);
       setTimeout(showCards, 1500);
 
-      //call the google ajax function, which in turn calls wJax()
-      gJax(input);
+      //call the google ajax function, which in turn calls warningCall()
+      googleCall(input);
 
       // News API Article Search
       let articleUrl =
@@ -72,12 +72,12 @@ function input() {
     }
   });
 
-  //ajax call the google map api to get a country code which is used in wJax()
-  function gJax(globalInput) {
+  //ajax call the google map api to get a country code which is used in warningCall
+  function googleCall(input) {
     $.ajax({
       url:
         "https://maps.googleapis.com/maps/api/geocode/json?address=" +
-        globalInput +
+        input +
         "&key=AIzaSyDDb1773cMxYPHcZaqKujBLjPEGhRFL0lE",
       method: "GET"
     }).then(function(response) {
@@ -93,15 +93,15 @@ function input() {
       if(res[0].formatted_address=="Korea"){
         googleOutput="KR";
       }
-      wJax(googleOutput);
+      warningCall(googleOutput);
       initMap();
       //Calling weather ajax call
       weatherAjax(res[0].formatted_address);
     });
   }
 
-  //pull and display travel warning based on the country code gJax() provides, and the cordinates used in initMap
-  function wJax(googleOutput) {
+  //pull and display travel warning based on the country code googleCall() provides, and the cordinates used in initMap
+  function warningCall(googleOutput) {
     $("#dropdown-wrapper").show();
     if (googleOutput != "CA") {
       $.ajax({
