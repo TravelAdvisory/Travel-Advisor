@@ -131,6 +131,9 @@ function wJax(googleOutput) {
       } else {
         simpleAdvice.text("Advice: Do not travel");
       }
+      if (response.safety.safetyInfo.length<1){
+        $("#dropdown-wrapper").remove();
+      }
       for (var i = 0; i < response.safety.safetyInfo.length; i++) {
         let newDiv = $("<li>");
         newDiv.append(
@@ -233,9 +236,22 @@ function reset() {
     $('.imgBox').remove();
     $("#tableHead").empty();
     $("#tableRow").empty();
+    $("#dropdown1").empty();
+    $("#safetyDisplay").empty();
     input();
     
   });
+  $(".dropdown-button").dropdown({
+    inDuration: 300,
+    outDuration: 225,
+    constrainWidth: true, // Do es not change width of dropdown to that of the activator
+    hover: true, // Activate on hover
+    gutter: 0, // Spacing from edge
+    belowOrigin: false, // Displays dropdown below the button
+    alignment: "left", // Displays dropdown with edge aligned to the left of button
+    stopPropagation: false // Stops event propagation
+  });
+
 }
 
 function initMap() {
