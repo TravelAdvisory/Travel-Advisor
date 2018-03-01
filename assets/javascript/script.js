@@ -12,9 +12,8 @@ let $search = $("#location_input");
 
 // Hide result divs on pageload, animate header and search button, run search function
 $(document).ready(function() {
-  $header.hide().fadeIn(2000);
+  $header.fadeIn(2000);
   $inputCard
-    .hide()
     .delay(1000)
     .fadeIn(2000);
   $("select").material_select();
@@ -45,8 +44,7 @@ function input() {
 
       // News API Article Search
       let articleUrl =
-        "https://newsapi.org/v2/everything?q=" +
-        "+" +
+        "https://newsapi.org/v2/everything?q=+" +
         input +
         "&sortBy=popularity&from=2018-01-01&apiKey=ef784bd059054855ac2bcbb58bf7335e";
       $.ajax({
@@ -173,16 +171,16 @@ function input() {
     }
   }
 
-  function weatherAjax(input) {
+  function weatherAjax(address) {
     $.ajax({
       url:
         "https://api.openweathermap.org/data/2.5/forecast?q=" +
-        input +
+        address +
         "&units=imperial&APPID=3761b7072db9ad7469e5eedcb1b70b7a",
       method: "GET",
       error: function() {
         let error = $("<th>").text(
-          "Unable to collect weather information on " + input
+          "Unable to collect weather information on " + address
         );
         $("#tableHead").append(error);
       }
@@ -191,12 +189,10 @@ function input() {
       console.log(result.length);
       //loop gets one result from each day given
       for (var i = 5; i < result.length; i = i + 8) {
-        let $tableHead = $("#tableHead");
-        let $tableRow = $("#tableRow");
         let $headDiv = $("<th>");
         let $rowDiv = $("<td>");
-        $tableHead.append($headDiv);
-        $tableRow.append($rowDiv);
+        $("#tableHead").append($headDiv);
+        $("#tableRow").append($rowDiv);
         let dayofWeek = convertTime(result[i].dt);
         $headDiv.text(dayofWeek);
         $rowDiv.html(
