@@ -128,7 +128,7 @@ function input() {
             simpleAdvice.text("Advice: Do not travel");
           }
           if (response.safety.safetyInfo.length < 1) {
-            $("#dropdown-wrapper").remove();
+            $("#dropdown-wrapper").hide();
           }
           for (var i = 0; i < response.safety.safetyInfo.length; i++) {
             let newDiv = $("<li>");
