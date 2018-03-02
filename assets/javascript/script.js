@@ -218,7 +218,7 @@ function input() {
         let dayofWeek = convertTime(result[i].dt);
         $headDiv.text(dayofWeek);
         $rowDiv.html(
-          "<img src =http://openweathermap.org/img/w/" +
+          "<img src =https://openweathermap.org/img/w/" +
             result[i].weather[0].icon +
             ".png> <br>" +
             result[i].weather[0].main +
